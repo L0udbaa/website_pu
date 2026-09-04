@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\User;
+use App\Notifications\KegiatanNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class KegiatanController extends Controller
@@ -46,7 +48,13 @@ class KegiatanController extends Controller
     {
         $validated = $this->validateRequest($request);
 
-        Kegiatan::create($validated);
+        // Simpan kegiatan
+        $kegiatan = Kegiatan::create($validated);
+
+        // Kirim notifikasi ke semua user
+        User::all()->each(function ($user) use ($kegiatan) {
+            $user->notify(new KegiatanNotification($kegiatan));
+        });
 
         return redirect()
             ->route('kegiatan.index')

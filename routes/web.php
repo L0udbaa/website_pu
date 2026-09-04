@@ -17,27 +17,149 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('progres-fisik', ProgresFisikController::class)->except(['show']);
-    // Tambahkan baris ini ke routes/web.php (di dalam middleware auth jika ada)
-    Route::resource('kegiatan', KegiatanController::class)->except(['show']);
+
+    // =====================================================
+    // PROFILE
+    // =====================================================
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+
+
+    // =====================================================
+    // PROGRES FISIK
+    // =====================================================
+
+    Route::resource('progres-fisik', ProgresFisikController::class)
+        ->except(['show']);
+
+
+    // =====================================================
+    // KEGIATAN
+    // =====================================================
+
+    Route::resource('kegiatan', KegiatanController::class)
+        ->except(['show']);
+
+
+    // =====================================================
+    // PROGRES KEUANGAN
+    // =====================================================
 
     Route::name('progres-keuangan.')
         ->prefix('progres-keuangan')
         ->group(function () {
-            // Rute spesifik didaftarkan lebih dulu supaya tidak bentrok dengan {kegiatan?}
-            Route::get('/create/{kegiatan?}', [ProgresKeuanganController::class, 'create'])->name('create');
-            Route::get('/{progresKeuangan}/edit/{kegiatan?}', [ProgresKeuanganController::class, 'edit'])->name('edit');
 
-            Route::get('/{kegiatan?}', [ProgresKeuanganController::class, 'index'])->name('index');
-            Route::post('/', [ProgresKeuanganController::class, 'store'])->name('store');
-            Route::put('/{progresKeuangan}', [ProgresKeuanganController::class, 'update'])->name('update');
-            Route::delete('/{progresKeuangan}', [ProgresKeuanganController::class, 'destroy'])->name('destroy');
+            // Create
+            Route::get('/create/{kegiatan?}', [
+                ProgresKeuanganController::class,
+                'create'
+            ])->name('create');
+
+            // Edit
+            Route::get('/{progresKeuangan}/edit/{kegiatan?}', [
+                ProgresKeuanganController::class,
+                'edit'
+            ])->name('edit');
+
+            // Index
+            Route::get('/{kegiatan?}', [
+                ProgresKeuanganController::class,
+                'index'
+            ])->name('index');
+
+            // Store
+            Route::post('/', [
+                ProgresKeuanganController::class,
+                'store'
+            ])->name('store');
+
+            // Update
+            Route::put('/{progresKeuangan}', [
+                ProgresKeuanganController::class,
+                'update'
+            ])->name('update');
+
+            // Delete
+            Route::delete('/{progresKeuangan}', [
+                ProgresKeuanganController::class,
+                'destroy'
+            ])->name('destroy');
         });
 
-        Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])->name('rekapitulasi.index');
+
+    // =====================================================
+    // REKAPITULASI
+    // =====================================================
+
+    Route::get('/rekapitulasi', [
+        RekapitulasiController::class,
+        'index'
+    ])->name('rekapitulasi.index');
+
+
+    // =====================================================
+    // NOTIFIKASI
+    // =====================================================
+
+    // -----------------------------------------------------
+    // Semua notifikasi
+    // -----------------------------------------------------
+
+    Route::get('/notifikasi', function () {
+
+        $notifications = auth()->user()
+            ->notifications()
+            ->latest()
+            ->paginate(15);
+
+        return view(
+            'notifikasi.index',
+            compact('notifications')
+        );
+
+    })->name('notifikasi.index');
+
+
+    // -----------------------------------------------------
+    // Tandai satu notifikasi sudah dibaca
+    // -----------------------------------------------------
+
+    Route::post('/notifikasi/{notification}/read', function ($notification) {
+
+        $notification = auth()->user()
+            ->notifications()
+            ->where('id', $notification)
+            ->firstOrFail();
+
+        $notification->markAsRead();
+
+        return back();
+
+    })->name('notifikasi.read');
+
+
+    // -----------------------------------------------------
+    // Tandai semua notifikasi sudah dibaca
+    // -----------------------------------------------------
+
+    Route::post('/notifikasi/read-all', function () {
+
+        auth()->user()
+            ->unreadNotifications
+            ->markAsRead();
+
+        return back();
+
+    })->name('notifikasi.read-all');
+
 });
+
 
 require __DIR__ . '/auth.php';

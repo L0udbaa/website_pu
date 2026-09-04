@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\ProgresFisik;
+use App\Models\User;
+use App\Notifications\ProgresFisikNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -40,7 +42,16 @@ class ProgresFisikController extends Controller
         $validated = $this->validateRequest($request);
         $validated['deviasi_fisik'] = $validated['realisasi_fisik'] - $validated['rencana_fisik'];
 
-        ProgresFisik::create($validated);
+        // Simpan progres fisik
+        $progresFisik = ProgresFisik::create($validated);
+
+        // Ambil data kegiatan untuk notifikasi
+        $progresFisik->load('kegiatan');
+
+        // Kirim notifikasi ke semua user
+        User::all()->each(function ($user) use ($progresFisik) {
+            $user->notify(new ProgresFisikNotification($progresFisik));
+        });
 
         return redirect()
             ->route('progres-fisik.index')
@@ -66,6 +77,14 @@ class ProgresFisikController extends Controller
         $validated['deviasi_fisik'] = $validated['realisasi_fisik'] - $validated['rencana_fisik'];
 
         $progresFisik->update($validated);
+
+        // Ambil data kegiatan untuk notifikasi
+        $progresFisik->load('kegiatan');
+
+        // Kirim notifikasi ke semua user
+        User::all()->each(function ($user) use ($progresFisik) {
+            $user->notify(new ProgresFisikNotification($progresFisik));
+        });
 
         return redirect()
             ->route('progres-fisik.index')

@@ -51,6 +51,9 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Relasi User dengan Kegiatan.
+     */
     public function kegiatan(): HasMany
     {
         return $this->hasMany(Kegiatan::class);
