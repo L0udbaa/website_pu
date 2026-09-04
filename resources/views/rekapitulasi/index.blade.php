@@ -24,7 +24,7 @@
             <form action="{{ route('rekapitulasi.index') }}" method="GET" class="row g-3 align-items-end mt-1">
 
                 {{-- Kegiatan --}}
-                <div class="col-md-4">
+                <div class="col-md-3">
 
                     <label class="rekap-label" for="kegiatan_id">
                         <i class="bi bi-list-ul" aria-hidden="true"></i>
@@ -71,7 +71,7 @@
                 </div>
 
                 {{-- Tombol --}}
-                <div class="col-md-2">
+                <div class="col-md-3">
 
                     <button type="submit" class="btn rekap-btn-primary w-100">
                         <i class="bi bi-search" aria-hidden="true"></i>
@@ -249,15 +249,15 @@
 =============================== --}}
     <style>
         .rekap-dashboard {
-            max-width: 1100px;
+            width: 100%;
         }
 
         .rekap-card {
-            background: #fff;
+            background: var(--admin-surface);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
-            border: 1px solid #eef0f4;
+            border: 1px solid var(--admin-border);
         }
 
         .rekap-card-title {
@@ -266,7 +266,7 @@
             gap: 8px;
             font-weight: 600;
             font-size: 1.05rem;
-            color: #1f2937;
+            color: var(--admin-text);
         }
 
         .rekap-card-title i {
@@ -279,13 +279,15 @@
             gap: 6px;
             font-size: .8rem;
             font-weight: 600;
-            color: #6b7280;
+            color: var(--admin-muted);
             margin-bottom: 6px;
         }
 
         .rekap-input {
             border-radius: 10px;
-            border-color: #e5e7eb;
+            border-color: var(--admin-border);
+            background-color: var(--admin-surface);
+            color: var(--admin-text);
             padding: .55rem .75rem;
         }
 
@@ -343,18 +345,18 @@
         .rekap-card-heading {
             font-weight: 700;
             font-size: 1.1rem;
-            color: #111827;
+            color: var(--admin-text);
         }
 
         .rekap-card-subheading {
             font-size: .85rem;
-            color: #6b7280;
+            color: var(--admin-muted);
         }
 
         .rekap-stat-table {
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #eef0f4;
+            border: 1px solid var(--admin-border);
         }
 
         .rekap-stat-row {
@@ -364,13 +366,13 @@
         }
 
         .rekap-stat-head {
-            background: #f9fafb;
+            background: var(--admin-surface-soft);
             font-size: .72rem;
             font-weight: 700;
             letter-spacing: .04em;
             text-transform: uppercase;
-            color: #6b7280;
-            border-bottom: 1px solid #eef0f4;
+            color: var(--admin-muted);
+            border-bottom: 1px solid var(--admin-border);
         }
 
         .rekap-stat-head div {
@@ -382,7 +384,7 @@
         .rekap-value {
             font-size: 1.15rem;
             font-weight: 700;
-            color: #111827;
+            color: var(--admin-text);
         }
 
         .rekap-value-blue {
