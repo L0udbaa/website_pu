@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Rekapitulasi')
+@section('title', 'Rekap Progres')
 
 @section('content')
 
@@ -9,7 +9,7 @@
         {{-- ==============================
          JUDUL
     =============================== --}}
-        <h1 class="h3 mb-3">Dashboard Rekapitulasi</h1>
+        <h1 class="h3 mb-3">Rekap Progres</h1>
 
         {{-- ==============================
          FILTER

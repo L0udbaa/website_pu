@@ -10,7 +10,8 @@
     </div>
 
     <nav class="sidebar-nav">
-        <a class="nav-link active" href="#" aria-current="page">
+        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}"
+            @if (request()->routeIs('dashboard')) aria-current="page" @endif>
             <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
             <span class="nav-text">Dashboard</span>
         </a>

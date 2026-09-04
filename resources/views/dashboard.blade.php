@@ -7,129 +7,82 @@
         <div class="page-heading-copy">
             <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
             <div>
-                <p class="eyebrow mb-1">Overview</p>
+                <p class="eyebrow mb-1">Monitoring Progres</p>
                 <h1 class="h3 mb-1">Dashboard</h1>
-                <p class="text-muted mb-0">Monitor performance, sales, users, and support from one clean workspace.</p>
+                <p class="text-muted mb-0">Ringkasan kegiatan dan capaian progres terbaru.</p>
             </div>
         </div>
         <div class="heading-actions">
-            <button class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-download" aria-hidden="true"></i>
-                Export</button>
-            <button class="btn btn-primary btn-sm" type="button"><i class="bi bi-file-earmark-plus" aria-hidden="true"></i>
-                Create Report</button>
+            <a class="btn btn-primary btn-sm" href="{{ route('kegiatan.create') }}"><i class="bi bi-plus-lg" aria-hidden="true"></i> Tambah Kegiatan</a>
         </div>
     </div>
 
-    <section class="row g-3 mt-1" aria-label="Dashboard metrics">
+    <section class="row g-3 mt-1" aria-label="Ringkasan dashboard">
         <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-primary">
-                <div class="metric-top">
-                    <span class="metric-label">Revenue</span>
-                    <span class="metric-icon"><i class="bi bi-currency-dollar" aria-hidden="true"></i></span>
-                </div>
-                <div class="metric-value">$48,240</div>
-                <div class="metric-meta">
-                    <span class="text-success">+12.5%</span>
-                    <span>from last month</span>
-                </div>
+                <div class="metric-top"><span class="metric-label">Total Kegiatan</span><span class="metric-icon"><i class="bi bi-kanban" aria-hidden="true"></i></span></div>
+                <div class="metric-value">{{ $jumlahKegiatan }}</div>
+                <div class="metric-meta"><span>proyek terdaftar</span></div>
             </article>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-success">
-                <div class="metric-top">
-                    <span class="metric-label">Orders</span>
-                    <span class="metric-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></span>
-                </div>
-                <div class="metric-value">1,284</div>
-                <div class="metric-meta">
-                    <span class="text-success">+8.2%</span>
-                    <span>new orders</span>
-                </div>
+                <div class="metric-top"><span class="metric-label">Progres Fisik</span><span class="metric-icon"><i class="bi bi-bricks" aria-hidden="true"></i></span></div>
+                <div class="metric-value">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
+                <div class="metric-meta"><span>realisasi kumulatif</span></div>
             </article>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-warning">
-                <div class="metric-top">
-                    <span class="metric-label">Customers</span>
-                    <span class="metric-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
-                </div>
-                <div class="metric-value">8,742</div>
-                <div class="metric-meta">
-                    <span class="text-success">+5.1%</span>
-                    <span>active users</span>
-                </div>
+                <div class="metric-top"><span class="metric-label">Realisasi Keuangan</span><span class="metric-icon"><i class="bi bi-cash-coin" aria-hidden="true"></i></span></div>
+                <div class="metric-value">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</div>
+                <div class="metric-meta"><span>realisasi kumulatif</span></div>
             </article>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-danger">
-                <div class="metric-top">
-                    <span class="metric-label">Tickets</span>
-                    <span class="metric-icon"><i class="bi bi-life-preserver" aria-hidden="true"></i></span>
-                </div>
-                <div class="metric-value">36</div>
-                <div class="metric-meta">
-                    <span class="text-danger">3 urgent</span>
-                    <span>need review</span>
-                </div>
+                <div class="metric-top"><span class="metric-label">Deviasi Fisik</span><span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span></div>
+                <div class="metric-value">{{ $deviasiFisik >= 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%</div>
+                <div class="metric-meta"><span>realisasi dibanding rencana</span></div>
             </article>
         </div>
     </section>
 
     <section class="row g-3 mt-1">
         <div class="col-12 col-xl-8">
-            <div class="panel">
+            <div class="panel h-100">
                 <div class="panel-header">
                     <div>
-                        <h2 class="h5 mb-1 section-title"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i><span>Sales
-                                Performance</span></h2>
-                        <p class="text-muted mb-0">Monthly revenue compared with operational targets.</p>
+                        <h2 class="h5 mb-1 section-title"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Capaian Progres</span></h2>
+                        <p class="text-muted mb-0">Gambaran cepat pencapaian proyek secara keseluruhan.</p>
                     </div>
-                    <a class="btn btn-light btn-sm" href="{{ url('charts') }}">View Details</a>
+                    <a class="btn btn-light btn-sm" href="{{ route('rekapitulasi.index') }}">Buka Rekap</a>
                 </div>
-
-                <div class="chart-bars" aria-label="Sales performance chart">
-                    <div class="chart-column bar-42"><span></span><small>Jan</small></div>
-                    <div class="chart-column bar-58"><span></span><small>Feb</small></div>
-                    <div class="chart-column bar-51"><span></span><small>Mar</small></div>
-                    <div class="chart-column bar-72"><span></span><small>Apr</small></div>
-                    <div class="chart-column bar-66"><span></span><small>May</small></div>
-                    <div class="chart-column bar-83"><span></span><small>Jun</small></div>
+                <div class="dashboard-progress-list">
+                    <div class="dashboard-progress-item">
+                        <div class="d-flex justify-content-between gap-3 mb-2"><span class="fw-semibold">Capaian Fisik</span><strong>{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong></div>
+                        <div class="progress" role="progressbar" aria-label="Capaian fisik" aria-valuenow="{{ $persentaseFisik }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-primary" style="width: {{ $persentaseFisik }}%"></div></div>
+                    </div>
+                    <div class="dashboard-progress-item">
+                        <div class="d-flex justify-content-between gap-3 mb-2"><span class="fw-semibold">Capaian Keuangan</span><strong class="text-success">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong></div>
+                        <div class="progress" role="progressbar" aria-label="Capaian keuangan" aria-valuenow="{{ $persentaseKeuangan }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-success" style="width: {{ $persentaseKeuangan }}%"></div></div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="col-12 col-xl-4">
             <div class="panel h-100">
                 <div class="panel-header">
                     <div>
-                        <h2 class="h5 mb-1 section-title"><i class="bi bi-activity" aria-hidden="true"></i><span>Team
-                                Activity</span></h2>
-                        <p class="text-muted mb-0">Recent operational updates.</p>
+                        <h2 class="h5 mb-1 section-title"><i class="bi bi-lightning-charge" aria-hidden="true"></i><span>Perhatian</span></h2>
+                        <p class="text-muted mb-0">Data yang perlu segera dilengkapi.</p>
                     </div>
                 </div>
-
-                <div class="activity-list">
-                    <div class="activity-item"><span class="activity-dot bg-primary"></span>
-                        <div>
-                            <p class="mb-1 fw-semibold">New campaign launched</p>
-                            <p class="text-muted small mb-0">Marketing team published the May offer.</p>
-                        </div>
-                    </div>
-                    <div class="activity-item"><span class="activity-dot bg-success"></span>
-                        <div>
-                            <p class="mb-1 fw-semibold">Payment batch cleared</p>
-                            <p class="text-muted small mb-0">246 invoices were processed successfully.</p>
-                        </div>
-                    </div>
-                    <div class="activity-item"><span class="activity-dot bg-warning"></span>
-                        <div>
-                            <p class="mb-1 fw-semibold">Support queue rising</p>
-                            <p class="text-muted small mb-0">Average first response time is 18 minutes.</p>
-                        </div>
-                    </div>
+                <div class="dashboard-attention">
+                    <div class="dashboard-attention-icon"><i class="bi bi-clipboard-x" aria-hidden="true"></i></div>
+                    <strong>{{ $kegiatanTanpaProgres }}</strong>
+                    <span>kegiatan belum memiliki data progres</span>
+                    <a href="{{ route('kegiatan.index') }}" class="btn btn-outline-secondary btn-sm mt-2">Periksa Kegiatan</a>
                 </div>
             </div>
         </div>
@@ -138,103 +91,39 @@
     <section class="panel mt-3">
         <div class="panel-header">
             <div>
-                <h2 class="h5 mb-1 section-title"><i class="bi bi-people" aria-hidden="true"></i><span>Recent Users</span>
-                </h2>
-                <p class="text-muted mb-0">Latest account activity across the workspace.</p>
+                <h2 class="h5 mb-1 section-title"><i class="bi bi-list-check" aria-hidden="true"></i><span>Kegiatan Terbaru</span></h2>
+                <p class="text-muted mb-0">Daftar kegiatan yang terakhir ditambahkan.</p>
             </div>
-            <a class="btn btn-outline-secondary btn-sm" href="{{ url('users') }}">Manage Users</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ route('kegiatan.index') }}">Lihat Semua</a>
         </div>
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">User</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Team</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Joined</th>
-                        <th scope="col" class="text-end">Action</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Kode</th><th>Kegiatan</th><th>Lokasi</th><th>Tahun</th><th class="text-end">Anggaran</th></tr></thead>
                 <tbody>
-                    @php
-                        $users = [
-                            [
-                                'name' => 'Sarah Ahmed',
-                                'email' => 'sarah@example.com',
-                                'avatar' => 'avatar-1.jpg',
-                                'role' => 'Admin',
-                                'team' => 'Operations',
-                                'status' => 'Active',
-                                'joined' => 'Jan 12, 2026',
-                            ],
-                            [
-                                'name' => 'Rafi Khan',
-                                'email' => 'rafi@example.com',
-                                'avatar' => 'avatar-2.jpg',
-                                'role' => 'Manager',
-                                'team' => 'Sales',
-                                'status' => 'Active',
-                                'joined' => 'Feb 03, 2026',
-                            ],
-                            [
-                                'name' => 'Nadia Islam',
-                                'email' => 'nadia@example.com',
-                                'avatar' => 'avatar-3.jpg',
-                                'role' => 'Editor',
-                                'team' => 'Content',
-                                'status' => 'Pending',
-                                'joined' => 'Mar 18, 2026',
-                            ],
-                            [
-                                'name' => 'Mina Torres',
-                                'email' => 'mina@example.com',
-                                'avatar' => 'avatar-4.jpg',
-                                'role' => 'Viewer',
-                                'team' => 'Finance',
-                                'status' => 'Suspended',
-                                'joined' => 'Apr 07, 2026',
-                            ],
-                            [
-                                'name' => 'Jon Oliver',
-                                'email' => 'jon@example.com',
-                                'avatar' => 'avatar-5.jpg',
-                                'role' => 'Analyst',
-                                'team' => 'Data',
-                                'status' => 'Active',
-                                'joined' => 'Apr 22, 2026',
-                            ],
-                        ];
-                        $statusBadge = [
-                            'Active' => 'text-bg-success',
-                            'Pending' => 'text-bg-warning',
-                            'Suspended' => 'text-bg-secondary',
-                        ];
-                    @endphp
-
-                    @foreach ($users as $user)
+                    @forelse ($kegiatan as $item)
                         <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <img class="avatar-img avatar-sm"
-                                        src="{{ asset('assets/images/avatar/' . $user['avatar']) }}"
-                                        alt="{{ $user['name'] }}">
-                                    <div>
-                                        <p class="fw-semibold mb-0">{{ $user['name'] }}</p>
-                                        <p class="text-muted small mb-0">{{ $user['email'] }}</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>{{ $user['role'] }}</td>
-                            <td>{{ $user['team'] }}</td>
-                            <td><span class="badge {{ $statusBadge[$user['status']] }}">{{ $user['status'] }}</span></td>
-                            <td>{{ $user['joined'] }}</td>
-                            <td class="text-end"><a class="btn btn-light btn-sm"
-                                    href="{{ url('user-details') }}">View</a></td>
+                            <td><span class="fw-semibold">{{ $item->kode_kegiatan }}</span></td>
+                            <td>{{ $item->nama_kegiatan }}</td>
+                            <td>{{ $item->lokasi ?: '-' }}</td>
+                            <td>{{ $item->tahun }}</td>
+                            <td class="text-end">Rp {{ number_format($item->anggaran, 0, ',', '.') }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr><td colspan="5" class="text-center text-muted py-4">Belum ada kegiatan.</td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </section>
+
+    <style>
+        .dashboard-progress-list { display: grid; gap: 1.25rem; padding-top: .5rem; }
+        .dashboard-progress-item strong { color: var(--admin-text); }
+        .dashboard-progress-item .progress { height: 10px; background: var(--admin-border); }
+        .dashboard-attention { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 155px; text-align: center; }
+        .dashboard-attention-icon { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: .6rem; border-radius: 50%; background: #fef3c7; color: #b45309; }
+        .dashboard-attention strong { color: var(--admin-text); font-size: 1.8rem; line-height: 1; }
+        .dashboard-attention span { margin-top: .4rem; color: var(--admin-muted); font-size: .85rem; }
+        html[data-theme="dark"] .dashboard-attention-icon { background: #422006; color: #fbbf24; }
+    </style>
 @endsection
