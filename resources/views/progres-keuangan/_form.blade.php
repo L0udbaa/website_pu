@@ -4,7 +4,7 @@
     $currentKegiatanId = old('kegiatan_id', $item->kegiatan_id ?? $selectedKegiatan?->id);
 
     // Nilai awal untuk input uang
-    $nilaiKontrakAwal = old('nilai_kontrak', $item->nilai_kontrak ?? '');
+    $nilaiKontrakAwal = old('nilai_kontrak', $selectedKegiatan?->anggaran ?? $item?->kegiatan?->anggaran ?? '');
     $realisasiKeuanganAwal = old('realisasi_keuangan', $item->realisasi_keuangan ?? '');
 
     // Format angka uang Indonesia
@@ -39,6 +39,7 @@
 
             @foreach ($kegiatanList as $kg)
                 <option value="{{ $kg->id }}"
+                    data-anggaran="{{ $kg->anggaran }}"
                     {{ (int) $currentKegiatanId === $kg->id ? 'selected' : '' }}>
                     {{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}
                 </option>
@@ -68,11 +69,14 @@
             name="nilai_kontrak"
             id="nilai_kontrak"
             class="form-control @error('nilai_kontrak') is-invalid @enderror"
-            placeholder="Contoh: 100.000.000"
+            placeholder="Otomatis dari anggaran kegiatan"
             inputmode="decimal"
             autocomplete="off"
+            readonly
             value="{{ $formatInputUang($nilaiKontrakAwal) }}"
-            required>
+            aria-describedby="nilai_kontrak_help">
+
+        <div id="nilai_kontrak_help" class="form-text">Nilai kontrak mengikuti anggaran kegiatan yang dipilih.</div>
 
         @error('nilai_kontrak')
             <div class="invalid-feedback">
@@ -123,7 +127,7 @@
 
         <input type="text"
             id="rencana_keuangan_display"
-            class="form-control bg-light"
+            class="form-control financial-calculated-field"
             value="Rp 0"
             readonly
             tabindex="-1">
@@ -239,7 +243,7 @@
 
         <input type="text"
             id="deviasi_keuangan_display"
-            class="form-control bg-light"
+            class="form-control financial-calculated-field"
             value="Rp 0"
             readonly
             tabindex="-1">
@@ -247,6 +251,37 @@
     </div>
 
 </div>
+
+<style>
+    .financial-calculated-field {
+        background-color: var(--admin-surface-soft) !important;
+        border-color: var(--admin-border) !important;
+        color: var(--admin-text) !important;
+        font-weight: 600;
+    }
+
+    html[data-theme="dark"] .financial-calculated-field {
+        background-color: #111827 !important;
+        border-color: #2f3b52 !important;
+        color: #e5edf7 !important;
+    }
+
+    .financial-calculated-field.text-danger {
+        color: var(--admin-danger) !important;
+    }
+
+    .financial-calculated-field.text-success {
+        color: var(--admin-success) !important;
+    }
+
+    html[data-theme="dark"] .financial-calculated-field.text-danger {
+        color: #f87171 !important;
+    }
+
+    html[data-theme="dark"] .financial-calculated-field.text-success {
+        color: #2dd4bf !important;
+    }
+</style>
 
 
 {{-- Catatan rumus --}}
@@ -286,6 +321,7 @@
 (function () {
 
     const nilaiKontrak = document.getElementById('nilai_kontrak');
+    const kegiatanSelect = document.getElementById('kegiatan_id');
     const rencanaPersen = document.getElementById('rencana_persen');
     const realisasiKeuangan = document.getElementById('realisasi_keuangan');
 
@@ -431,6 +467,21 @@
 
     }
 
+    function sinkronkanNilaiKontrak() {
+        const option = kegiatanSelect?.selectedOptions[0];
+        const anggaran = Number(option?.dataset.anggaran || 0);
+
+        nilaiKontrak.value = anggaran > 0
+            ? anggaran.toLocaleString('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            })
+            : '';
+        hitungPreview();
+    }
+
+    kegiatanSelect?.addEventListener('change', sinkronkanNilaiKontrak);
+
 
     /*
      * Format otomatis Nilai Kontrak
@@ -491,6 +542,9 @@
 
 
     // Jalankan perhitungan pertama kali
+    if (kegiatanSelect && kegiatanSelect.value) {
+        sinkronkanNilaiKontrak();
+    }
     hitungPreview();
 
 })();
