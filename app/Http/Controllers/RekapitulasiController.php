@@ -24,6 +24,7 @@ class RekapitulasiController extends Controller
 
         // Query Rencana Fisik
         $rencanaFisikQuery = ProgresFisik::query()
+            ->latestPerKegiatan()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })
@@ -36,6 +37,7 @@ class RekapitulasiController extends Controller
 
         // Query Realisasi Fisik
         $realisasiFisikQuery = ProgresFisik::query()
+            ->latestPerKegiatan()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })
@@ -61,6 +63,7 @@ class RekapitulasiController extends Controller
 
         // Query Rencana Keuangan
         $rencanaKeuanganQuery = ProgresKeuangan::query()
+            ->latestPerKegiatan()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })
@@ -73,6 +76,7 @@ class RekapitulasiController extends Controller
 
         // Query Realisasi Keuangan
         $realisasiKeuanganQuery = ProgresKeuangan::query()
+            ->latestPerKegiatan()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })

@@ -17,32 +17,39 @@
         </div>
     </div>
 
-    <section class="row g-3 mt-1" aria-label="Ringkasan dashboard">
-        <div class="col-12 col-sm-6 col-xl-3">
+    <section class="dashboard-metrics mt-1" aria-label="Ringkasan dashboard">
+        <div>
             <article class="metric-card metric-primary">
                 <div class="metric-top"><span class="metric-label">Total Kegiatan</span><span class="metric-icon"><i class="bi bi-kanban" aria-hidden="true"></i></span></div>
                 <div class="metric-value">{{ $jumlahKegiatan }}</div>
                 <div class="metric-meta"><span>proyek terdaftar</span></div>
             </article>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div>
             <article class="metric-card metric-success">
                 <div class="metric-top"><span class="metric-label">Progres Fisik</span><span class="metric-icon"><i class="bi bi-bricks" aria-hidden="true"></i></span></div>
                 <div class="metric-value">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
                 <div class="metric-meta"><span>realisasi kumulatif</span></div>
             </article>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div>
             <article class="metric-card metric-warning">
                 <div class="metric-top"><span class="metric-label">Realisasi Keuangan</span><span class="metric-icon"><i class="bi bi-cash-coin" aria-hidden="true"></i></span></div>
                 <div class="metric-value">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</div>
                 <div class="metric-meta"><span>realisasi kumulatif</span></div>
             </article>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div>
             <article class="metric-card metric-danger">
                 <div class="metric-top"><span class="metric-label">Deviasi Fisik</span><span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span></div>
                 <div class="metric-value">{{ $deviasiFisik >= 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%</div>
+                <div class="metric-meta"><span>realisasi dibanding rencana</span></div>
+            </article>
+        </div>
+        <div>
+            <article class="metric-card metric-danger">
+                <div class="metric-top"><span class="metric-label">Deviasi Keuangan</span><span class="metric-icon"><i class="bi bi-arrow-left-right" aria-hidden="true"></i></span></div>
+                <div class="metric-value">{{ $deviasiKeuangan >= 0 ? '+' : '-' }} Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}</div>
                 <div class="metric-meta"><span>realisasi dibanding rencana</span></div>
             </article>
         </div>
@@ -141,6 +148,10 @@
     </section>
 
     <style>
+        .dashboard-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+        .dashboard-metrics > div { min-width: 0; }
+        .dashboard-metrics .metric-card { height: 100%; min-width: 0; }
+        .dashboard-metrics .metric-value { font-size: 1.35rem; overflow-wrap: anywhere; }
         .dashboard-progress-list { display: grid; gap: 1.25rem; padding-top: .5rem; }
         .dashboard-progress-item strong { color: var(--admin-text); }
         .dashboard-progress-item .progress { height: 10px; background: var(--admin-border); }
@@ -156,5 +167,8 @@
         .dashboard-missing-item span { margin-top: .15rem; overflow: hidden; color: var(--admin-muted); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
         .dashboard-missing-actions { display: flex; flex: 0 0 auto; gap: .3rem; }
         .dashboard-missing-actions .badge { text-decoration: none; }
+        @media (max-width: 1199.98px) { .dashboard-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (max-width: 767.98px) { .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 479.98px) { .dashboard-metrics { grid-template-columns: 1fr; } }
     </style>
 @endsection

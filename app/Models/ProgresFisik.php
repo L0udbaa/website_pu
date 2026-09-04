@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -34,5 +35,15 @@ class ProgresFisik extends Model
     public function kegiatan(): BelongsTo
     {
         return $this->belongsTo(Kegiatan::class);
+    }
+
+    public function scopeLatestPerKegiatan(Builder $query): Builder
+    {
+        return $query->whereIn(
+            $this->getTable() . '.id',
+            static::query()
+                ->selectRaw('MAX(id)')
+                ->groupBy('kegiatan_id')
+        );
     }
 }

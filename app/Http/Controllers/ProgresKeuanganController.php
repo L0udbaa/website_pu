@@ -165,9 +165,8 @@ class ProgresKeuanganController extends Controller
 
     private function validateData(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'kegiatan_id'         => ['required', 'exists:kegiatan,id'],
-            'nilai_kontrak'       => ['required', 'numeric', 'min:0'],
             'rencana_persen'      => ['required', 'numeric', 'min:0', 'max:100'],
             'tanggal_rencana'     => ['required', 'date'],
             'realisasi_persen'    => ['nullable', 'numeric', 'min:0', 'max:100'],
@@ -178,6 +177,10 @@ class ProgresKeuanganController extends Controller
             // rencana_keuangan dan deviasi_keuangan
             // dihitung otomatis oleh server.
         ]);
+
+        $data['nilai_kontrak'] = Kegiatan::findOrFail($data['kegiatan_id'])->anggaran;
+
+        return $data;
     }
 
     /**
