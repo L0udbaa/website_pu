@@ -74,5 +74,6 @@
         .profile-summary { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .profile-summary-avatar { display: grid; width: 76px; height: 76px; place-items: center; margin-bottom: 1rem; border-radius: 50%; background: #dbeafe; color: #1d4ed8; font-size: 1.4rem; font-weight: 800; }
         html[data-theme="dark"] .profile-summary-avatar { background: #1e3a5f; color: #bfdbfe; }
+        html[data-theme="dark"] .border-danger-subtle { border-color: #7f1d1d !important; }
     </style>
 @endsection
