@@ -75,15 +75,39 @@
                 <div class="panel-header">
                     <div>
                         <h2 class="h5 mb-1 section-title"><i class="bi bi-lightning-charge" aria-hidden="true"></i><span>Perhatian</span></h2>
-                        <p class="text-muted mb-0">Data yang perlu segera dilengkapi.</p>
+                        <p class="text-muted mb-0">Form kegiatan dan progres yang belum diisi.</p>
                     </div>
                 </div>
                 <div class="dashboard-attention">
                     <div class="dashboard-attention-icon"><i class="bi bi-clipboard-x" aria-hidden="true"></i></div>
-                    <strong>{{ $kegiatanTanpaProgres }}</strong>
-                    <span>kegiatan belum memiliki data progres</span>
-                    <a href="{{ route('kegiatan.index') }}" class="btn btn-outline-secondary btn-sm mt-2">Periksa Kegiatan</a>
+                    <strong>{{ $kegiatanBelumLengkap->count() }}</strong>
+                    <span>kegiatan memiliki form yang belum lengkap</span>
                 </div>
+                @if ($kegiatanBelumLengkap->isNotEmpty())
+                    <div class="dashboard-missing-list">
+                        @foreach ($kegiatanBelumLengkap as $item)
+                            <div class="dashboard-missing-item">
+                                <div class="min-w-0">
+                                    <strong>{{ $item->kode_kegiatan }}</strong>
+                                    <span>{{ $item->nama_kegiatan }}</span>
+                                </div>
+                                <div class="dashboard-missing-actions">
+                                    @foreach ($item->missing_forms as $missingForm)
+                                        @if (in_array($missingForm, ['Data Utama', 'Lokasi', 'Tahun', 'Anggaran', 'PJ']))
+                                            <a href="{{ route('kegiatan.edit', $item) }}" class="badge text-bg-warning">{{ $missingForm }}</a>
+                                        @elseif ($missingForm === 'Fisik')
+                                            <a href="{{ route('progres-fisik.create') }}" class="badge text-bg-primary">Fisik</a>
+                                        @elseif ($missingForm === 'Keuangan')
+                                            <a href="{{ route('progres-keuangan.create', $item) }}" class="badge text-bg-success">Keuangan</a>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-success text-center mb-0"><i class="bi bi-check-circle" aria-hidden="true"></i> Semua form progres sudah diisi.</p>
+                @endif
             </div>
         </div>
     </section>
@@ -125,5 +149,12 @@
         .dashboard-attention strong { color: var(--admin-text); font-size: 1.8rem; line-height: 1; }
         .dashboard-attention span { margin-top: .4rem; color: var(--admin-muted); font-size: .85rem; }
         html[data-theme="dark"] .dashboard-attention-icon { background: #422006; color: #fbbf24; }
+        .dashboard-missing-list { display: grid; gap: .6rem; margin-top: 1rem; max-height: 220px; overflow-y: auto; }
+        .dashboard-missing-item { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .7rem; border: 1px solid var(--admin-border); border-radius: 8px; background: var(--admin-surface-soft); }
+        .dashboard-missing-item strong, .dashboard-missing-item span { display: block; }
+        .dashboard-missing-item strong { color: var(--admin-text); font-size: .85rem; }
+        .dashboard-missing-item span { margin-top: .15rem; overflow: hidden; color: var(--admin-muted); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+        .dashboard-missing-actions { display: flex; flex: 0 0 auto; gap: .3rem; }
+        .dashboard-missing-actions .badge { text-decoration: none; }
     </style>
 @endsection

@@ -43,9 +43,12 @@
 
     <div class="col-12 col-md-6">
         <label for="anggaran" class="form-label">Anggaran (Rp)</label>
-        <input type="number" step="0.01" min="0" name="anggaran" id="anggaran"
-            class="form-control @error('anggaran') is-invalid @enderror"
-            value="{{ old('anggaran', $kegiatan->anggaran ?? '') }}">
+        <div class="input-group">
+            <span class="input-group-text">Rp</span>
+            <input type="text" inputmode="numeric" name="anggaran" id="anggaran"
+                class="form-control @error('anggaran') is-invalid @enderror"
+                value="{{ old('anggaran', $kegiatan->anggaran ?? '') }}" placeholder="0" autocomplete="off">
+        </div>
         @error('anggaran')
             <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -74,3 +77,25 @@
     </button>
     <a href="{{ route('kegiatan.index') }}" class="btn btn-outline-secondary">Batal</a>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('anggaran');
+        const form = input?.closest('form');
+
+        if (!input || !form) return;
+
+        const formatRupiah = (value) => {
+            const digits = value.replace(/\D/g, '');
+            return digits ? new Intl.NumberFormat('id-ID').format(Number(digits)) : '';
+        };
+
+        input.value = formatRupiah(input.value);
+        input.addEventListener('input', () => {
+            input.value = formatRupiah(input.value);
+        });
+        form.addEventListener('submit', () => {
+            input.value = input.value.replace(/\D/g, '');
+        });
+    });
+</script>

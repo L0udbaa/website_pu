@@ -28,13 +28,58 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
 
+        $kegiatanBelumLengkap = Kegiatan::withCount(['progresFisik', 'progresKeuangan'])
+            ->where(function ($query) {
+                $query->whereNull('kode_kegiatan')
+                    ->orWhere('kode_kegiatan', '')
+                    ->orWhereNull('nama_kegiatan')
+                    ->orWhere('nama_kegiatan', '')
+                    ->orWhereNull('lokasi')
+                    ->orWhere('lokasi', '')
+                    ->orWhereNull('tahun')
+                    ->orWhere('tahun', 0)
+                    ->orWhereNull('anggaran')
+                    ->orWhere('anggaran', 0)
+                    ->orWhereNull('user_id')
+                    ->orWhereDoesntHave('progresFisik')
+                    ->orWhereDoesntHave('progresKeuangan');
+            })
+            ->orderBy('nama_kegiatan')
+            ->get();
+
+        $kegiatanBelumLengkap->each(function (Kegiatan $item) {
+            $missingForms = [];
+
+            if (blank($item->kode_kegiatan) || blank($item->nama_kegiatan)) {
+                $missingForms[] = 'Data Utama';
+            }
+            if (blank($item->lokasi)) {
+                $missingForms[] = 'Lokasi';
+            }
+            if (blank($item->tahun) || (int) $item->tahun === 0) {
+                $missingForms[] = 'Tahun';
+            }
+            if (blank($item->anggaran) || (float) $item->anggaran === 0.0) {
+                $missingForms[] = 'Anggaran';
+            }
+            if (is_null($item->user_id)) {
+                $missingForms[] = 'PJ';
+            }
+            if ($item->progres_fisik_count === 0) {
+                $missingForms[] = 'Fisik';
+            }
+            if ($item->progres_keuangan_count === 0) {
+                $missingForms[] = 'Keuangan';
+            }
+
+            $item->setAttribute('missing_forms', $missingForms);
+        });
+
         return view('dashboard', [
             'jumlahKegiatan' => Kegiatan::count(),
             'jumlahProgresFisik' => ProgresFisik::count(),
             'jumlahProgresKeuangan' => ProgresKeuangan::count(),
-            'kegiatanTanpaProgres' => Kegiatan::whereDoesntHave('progresFisik')
-                ->whereDoesntHave('progresKeuangan')
-                ->count(),
+            'kegiatanBelumLengkap' => $kegiatanBelumLengkap,
             'persentaseFisik' => $persentaseFisik,
             'persentaseKeuangan' => $persentaseKeuangan,
             'totalRencanaFisik' => $totalRencanaFisik,
