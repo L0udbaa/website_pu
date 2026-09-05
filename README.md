@@ -13,7 +13,7 @@ Aplikasi web untuk memantau progres fisik dan keuangan kegiatan pembangunan. Apl
 - Autentikasi, verifikasi email, reset password, dan logout.
 - Profil pengguna untuk mengubah nama serta email.
 - Pengaturan akun untuk mengubah password dan menghapus akun.
-- Halaman login dengan branding PUPR dan layout dashboard yang responsif.
+- Halaman login dengan branding Kementerian Pekerjaan Umum dan layout dashboard yang responsif.
 - Kartu informasi admin di bagian bawah sidebar.
 - Tampilan responsif dengan dukungan tema dashboard.
 
@@ -138,7 +138,7 @@ Semua route aplikasi, kecuali halaman autentikasi dan redirect awal, membutuhkan
 
 ## Autentikasi
 
-Halaman login tersedia di `/login` dan menggunakan layout guest yang mengikuti template dashboard PUPR. Alur autentikasi juga mencakup:
+Halaman login tersedia di `/login` dan menggunakan layout guest yang mengikuti template dashboard Kementerian Pekerjaan Umum. Alur autentikasi juga mencakup:
 
 - Registrasi pengguna.
 - Verifikasi email.

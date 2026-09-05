@@ -115,8 +115,9 @@ a {
 }
 
 .brand-title {
-  font-size: 1.05rem;
+  font-size: 0.78rem;
   font-weight: 800;
+  white-space: normal;
 }
 
 .brand-subtitle {

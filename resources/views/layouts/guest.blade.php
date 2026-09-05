@@ -40,9 +40,9 @@
             <div class="auth-layout">
                 <section class="auth-aside">
                     <a class="auth-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('logo-pupr.png') }}" alt="Logo PUPR">
+                        <img src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
                         <span>
-                            <span class="auth-brand-title">PUPR</span>
+                            <span class="auth-brand-title">KEMENTERIAN PEKERJAAN UMUM</span>
                             <span class="auth-brand-subtitle">Monitoring Progres</span>
                         </span>
                     </a>

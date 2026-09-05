@@ -1,9 +1,9 @@
 <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
     <div class="sidebar-header">
-        <a class="brand-mark" href="#" aria-label="Monitoring Progres PUPR">
-            <img class="" width="60" src="{{ asset('logo-pupr.png') }}" alt="">
+        <a class="brand-mark" href="#" aria-label="Monitoring Progres Kementerian Pekerjaan Umum">
+            <img class="" width="60" src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
             <span class="brand-copy">
-                <span class="brand-title">PUPR</span>
+            <span class="brand-title">KEMENTERIAN PEKERJAAN UMUM</span>
                 <span class="brand-subtitle">Monitoring Progres</span>
             </span>
         </a>
