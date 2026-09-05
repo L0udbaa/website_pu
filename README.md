@@ -13,6 +13,8 @@ Aplikasi web untuk memantau progres fisik dan keuangan kegiatan pembangunan. Apl
 - Autentikasi, verifikasi email, reset password, dan logout.
 - Profil pengguna untuk mengubah nama serta email.
 - Pengaturan akun untuk mengubah password dan menghapus akun.
+- Halaman login dengan branding PUPR dan layout dashboard yang responsif.
+- Kartu informasi admin di bagian bawah sidebar.
 - Tampilan responsif dengan dukungan tema dashboard.
 
 ## Teknologi
@@ -57,13 +59,20 @@ Pastikan perangkat sudah memiliki:
    php artisan key:generate
    ```
 
-4. Atur koneksi database pada file `.env`. Contoh untuk MySQL:
+4. Atur koneksi database pada file `.env`. Secara default aplikasi menggunakan SQLite:
+
+   ```env
+   DB_CONNECTION=sqlite
+   DB_DATABASE=/absolute/path/ke/database/database.sqlite
+   ```
+
+   Pastikan file database tersedia sebelum menjalankan migration. Untuk MySQL, gunakan konfigurasi berikut:
 
    ```env
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
-   DB_DATABASE=nama_database
+   DB_DATABASE=monitoring_progres
    DB_USERNAME=root
    DB_PASSWORD=
    ```
@@ -127,6 +136,18 @@ Ganti password akun tersebut pada lingkungan selain development.
 
 Semua route aplikasi, kecuali halaman autentikasi dan redirect awal, membutuhkan pengguna yang sudah login. Dashboard juga membutuhkan email yang sudah diverifikasi.
 
+## Autentikasi
+
+Halaman login tersedia di `/login` dan menggunakan layout guest yang mengikuti template dashboard PUPR. Alur autentikasi juga mencakup:
+
+- Registrasi pengguna.
+- Verifikasi email.
+- Reset password.
+- Konfirmasi password.
+- Logout.
+
+Setelah login, pengguna dapat membuka profil melalui `/profile` atau pengaturan keamanan melalui `/settings`.
+
 ## Pengujian
 
 Jalankan seluruh test dengan:
@@ -162,6 +183,10 @@ resources/views/
 public/assets/            Asset Bootstrap, icon, gambar, dan JavaScript
 routes/                   Route web dan autentikasi
 ```
+
+## Catatan Pengembangan
+
+Gunakan `npm run dev` saat mengubah asset frontend dan `npm run build` sebelum deployment. Jangan menggunakan akun seed administrator pada lingkungan production tanpa mengganti passwordnya.
 
 ## Lisensi
 
