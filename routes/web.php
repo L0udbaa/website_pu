@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgresFisikController;
 use App\Http\Controllers\ProgresKeuanganController;
 use App\Http\Controllers\RekapitulasiController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -117,7 +118,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/notifikasi', function () {
 
-        $notifications = auth()->user()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $notifications = $user
             ->notifications()
             ->latest()
             ->paginate(15);
@@ -136,7 +140,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notifikasi/{notification}/read', function ($notification) {
 
-        $notification = auth()->user()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $notification = $user
             ->notifications()
             ->where('id', $notification)
             ->firstOrFail();
@@ -154,7 +161,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notifikasi/read-all', function () {
 
-        auth()->user()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $user
             ->unreadNotifications
             ->markAsRead();
 

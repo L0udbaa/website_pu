@@ -36,13 +36,8 @@
 
     <div class="sidebar-user">
         <img class="avatar-img avatar-md sidebar-user-avatar" src="{{ asset('assets/images/avatar/avatar.jpg') }}"
-            alt="User">
-        <strong>User</strong>
-        <small>Active Workspace</small>
-    </div>
-
-    <div class="sidebar-footer">
-        <span class="status-dot"></span>
-        <span class="sidebar-footer-text">System running smoothly</span>
+            alt="{{ auth()->user()->nama }}">
+        <strong>{{ auth()->user()->nama }}</strong>
+        <small>{{ ucfirst(auth()->user()->role) }} Account</small>
     </div>
 </aside>
