@@ -294,16 +294,16 @@
                     <li>
                         <a
                             class="dropdown-item"
-                            href="{{ url('profile') }}">
-                            Profile
+                            href="{{ route('profile.edit') }}">
+                            Profil
                         </a>
                     </li>
 
                     <li>
                         <a
                             class="dropdown-item"
-                            href="{{ url('settings') }}">
-                            Account settings
+                            href="{{ route('settings') }}">
+                            Pengaturan Akun
                         </a>
                     </li>
 
