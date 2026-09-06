@@ -1,61 +1,175 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'Monitoring Progres') }}</title>
-        <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
-        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <style>
-            .auth-shell { min-height: 100vh; display: grid; place-items: center; padding: 2rem 1rem; background: linear-gradient(180deg, #f8fbff 0%, #eef4fa 100%); }
-            .auth-layout { display: grid; grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr); width: min(920px, 100%); overflow: hidden; border: 1px solid #dbe4ef; border-radius: 12px; background: #ffffff; box-shadow: 0 26px 70px rgba(15, 23, 42, 0.12); }
-            .auth-aside { display: flex; flex-direction: column; justify-content: space-between; padding: 2.5rem; background: #111827; color: #ffffff; }
-            .auth-brand { display: inline-flex; align-items: center; gap: 0.8rem; color: #ffffff; }
-            .auth-brand:hover { color: #ffffff; }
-            .auth-brand img { width: 58px; height: 58px; object-fit: contain; }
-            .auth-brand-title { display: block; font-size: 1.1rem; font-weight: 800; }
-            .auth-brand-subtitle { display: block; color: #9ca3af; font-size: 0.8rem; }
-            .auth-aside-copy { max-width: 250px; }
-            .auth-aside-copy h1 { margin-bottom: 0.8rem; font-size: 2rem; font-weight: 800; line-height: 1.15; }
-            .auth-aside-copy p { margin: 0; color: #cbd5e1; line-height: 1.65; }
-            .auth-aside-footer { color: #9ca3af; font-size: 0.85rem; }
-            .auth-form-panel { padding: 2.5rem; }
-            .auth-form-panel h2 { color: #1f2937; font-weight: 800; }
-            .auth-form-panel .form-control { min-height: 46px; border-color: #dbe4ef; }
-            .auth-form-panel .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.12); }
-            .auth-form-panel .btn-primary { min-height: 46px; }
-            @media (max-width: 767.98px) {
-                .auth-layout { grid-template-columns: 1fr; }
-                .auth-aside { gap: 2rem; padding: 1.75rem; }
-                .auth-aside-copy h1 { font-size: 1.65rem; }
-                .auth-form-panel { padding: 1.75rem; }
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Monitoring Progres Kementerian Pekerjaan Umum">
+    <title>{{ config('app.name', 'Monitoring Progres') }} | Kementerian Pekerjaan Umum</title>
+
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    <style>
+        /* Ambient Floating Glow matching Template Theme */
+        .auth-ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.55;
+            will-change: transform;
+        }
+
+        .auth-glow-1 {
+            top: -80px;
+            left: -80px;
+            width: 440px;
+            height: 440px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, transparent 70%);
+            animation: floatGlow 14s ease-in-out infinite alternate;
+        }
+
+        .auth-glow-2 {
+            bottom: -80px;
+            right: -80px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.16) 0%, transparent 70%);
+            animation: floatGlow 18s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(35px, 35px); }
+        }
+
+        /* Card Animation */
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            animation: authCardFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes authCardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.99);
             }
-        </style>
-    </head>
-    <body>
-        <main class="auth-shell">
-            <div class="auth-layout">
-                <section class="auth-aside">
-                    <a class="auth-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
-                        <span>
-                            <span class="auth-brand-title">KEMENTERIAN PEKERJAAN UMUM</span>
-                            <span class="auth-brand-subtitle">Monitoring Progres</span>
-                        </span>
-                    </a>
-                    <div class="auth-aside-copy">
-                        <h1>Monitoring progres kegiatan lebih terarah.</h1>
-                        <p>Kelola kegiatan, progres fisik, dan progres keuangan dalam satu dashboard.</p>
-                    </div>
-                    <div class="auth-aside-footer">Sistem Monitoring Progres</div>
-                </section>
-                <section class="auth-form-panel">
-                    {{ $slot }}
-                </section>
-            </div>
-        </main>
-    </body>
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Input Group Focus Styling */
+        .input-group:focus-within .input-group-text,
+        .input-group:focus-within .form-control {
+            border-color: var(--admin-primary) !important;
+        }
+
+        .btn-toggle-pw {
+            cursor: pointer;
+            transition: color 0.18s ease;
+        }
+
+        .btn-toggle-pw:hover {
+            color: var(--admin-text) !important;
+        }
+
+        /* Animated Submit Button */
+        .btn-animated-submit {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-animated-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-animated-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-animated-submit::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: rotate(25deg);
+            transition: none;
+        }
+
+        .btn-animated-submit:hover::after {
+            left: 120%;
+            transition: left 0.75s ease-in-out;
+        }
+
+        /* Alert Shake */
+        @keyframes alertShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .alert-shake {
+            animation: alertShake 0.4s ease;
+        }
+
+        /* Prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+            .auth-card,
+            .auth-ambient-glow,
+            .alert-shake,
+            .btn-animated-submit::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+
+    @stack('styles')
+</head>
+
+<body class="auth-body">
+    {{-- THEME TOGGLE (From Template) --}}
+    <div class="auth-theme-toggle">
+        <button
+            class="icon-button theme-toggle"
+            type="button"
+            data-theme-toggle
+            aria-label="Switch color theme"
+            title="Switch color theme">
+            <i class="bi bi-moon-stars"
+                data-theme-icon
+                aria-hidden="true"></i>
+        </button>
+    </div>
+
+    {{-- AMBIENT ANIMATED GLOW --}}
+    <div class="auth-ambient-glow auth-glow-1" aria-hidden="true"></div>
+    <div class="auth-ambient-glow auth-glow-2" aria-hidden="true"></div>
+
+    {{-- MAIN AUTH PAGE (From Template) --}}
+    <main class="auth-page">
+        <div class="auth-card">
+            {{ $slot }}
+        </div>
+    </main>
+
+    <!-- Template JS -->
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/main.js') }}"></script>
+
+    @stack('scripts')
+</body>
+
 </html>
