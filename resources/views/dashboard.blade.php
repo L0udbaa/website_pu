@@ -33,7 +33,7 @@
                     <span class="metric-label">Total Kegiatan</span>
                     <span class="metric-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
                 </div>
-                <div class="metric-value">{{ $jumlahKegiatan }}</div>
+                <div class="metric-value fs-2 lh-1">{{ $jumlahKegiatan }}</div>
                 <div class="metric-meta">
                     <span class="text-primary fw-semibold">{{ $jumlahKegiatan }} Kegiatan</span>
                     <span>terdaftar aktif</span>
@@ -48,7 +48,7 @@
                     <span class="metric-label">Realisasi Fisik</span>
                     <span class="metric-icon"><i class="bi bi-tools" aria-hidden="true"></i></span>
                 </div>
-                <div class="metric-value">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
+                <div class="metric-value fs-2 lh-1">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
                 <div class="metric-meta">
                     @if ($deviasiFisik > 0)
                         <span class="text-success fw-semibold"><i class="bi bi-arrow-up-short"></i>+{{ number_format($deviasiFisik, 2, ',', '.') }}%</span>
@@ -71,7 +71,7 @@
                     <span class="metric-label">Realisasi Keuangan</span>
                     <span class="metric-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></span>
                 </div>
-                <div class="metric-value metric-value-currency">
+                <div class="metric-value metric-value-currency fs-4 lh-1">
                     Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}
                 </div>
                 <div class="metric-meta">
@@ -95,7 +95,7 @@
                         <i class="bi {{ $kegiatanBelumLengkap->count() > 0 ? 'bi-exclamation-triangle' : 'bi-shield-check' }}" aria-hidden="true"></i>
                     </span>
                 </div>
-                <div class="metric-value">{{ $kegiatanBelumLengkap->count() }}</div>
+                <div class="metric-value fs-2 lh-1">{{ $kegiatanBelumLengkap->count() }}</div>
                 <div class="metric-meta">
                     @if ($kegiatanBelumLengkap->count() > 0)
                         <span class="text-danger fw-semibold">{{ $kegiatanBelumLengkap->count() }} Kegiatan</span>
@@ -167,7 +167,7 @@
                     <div class="col-12 col-sm-4">
                         <div class="p-3 border rounded-3 text-center">
                             <small class="text-muted text-uppercase d-block fw-semibold mb-1">Status Deviasi Fisik</small>
-                            <h4 class="mb-0 fw-bold {{ $deviasiFisik > 0 ? 'text-success' : ($deviasiFisik < 0 ? 'text-danger' : 'text-muted') }}">
+                            <h4 class="fs-5 mb-0 fw-bold {{ $deviasiFisik > 0 ? 'text-success' : ($deviasiFisik < 0 ? 'text-danger' : 'text-muted') }}">
                                 {{ $deviasiFisik > 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%
                             </h4>
                             <small class="text-muted">{{ $deviasiFisik > 0 ? 'Di atas rencana' : ($deviasiFisik < 0 ? 'Perlu percepatan' : 'Sesuai jadwal') }}</small>
@@ -176,7 +176,7 @@
                     <div class="col-12 col-sm-4">
                         <div class="p-3 border rounded-3 text-center">
                             <small class="text-muted text-uppercase d-block fw-semibold mb-1">Status Deviasi Keuangan</small>
-                            <h4 class="dashboard-summary-value mb-0 fw-bold {{ $deviasiKeuangan >= 0 ? 'text-success' : 'text-danger' }}">
+                            <h4 class="dashboard-summary-value fs-5 mb-0 fw-bold {{ $deviasiKeuangan >= 0 ? 'text-success' : 'text-danger' }}">
                                 {{ $deviasiKeuangan >= 0 ? '+' : '-' }}Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}
                             </h4>
                             <small class="text-muted">{{ $deviasiKeuangan >= 0 ? 'Optimal' : 'Sisa Alokasi' }}</small>
@@ -185,7 +185,7 @@
                     <div class="col-12 col-sm-4">
                         <div class="p-3 border rounded-3 text-center">
                             <small class="text-muted text-uppercase d-block fw-semibold mb-1">Total Pagu Kegiatan</small>
-                            <h4 class="dashboard-summary-value mb-0 fw-bold text-primary">
+                            <h4 class="dashboard-summary-value fs-5 mb-0 fw-bold text-primary">
                                 Rp {{ number_format($kegiatan->sum('anggaran'), 0, ',', '.') }}
                             </h4>
                             <small class="text-muted">{{ $kegiatan->count() }} dari {{ $jumlahKegiatan }} kegiatan terbaru</small>
