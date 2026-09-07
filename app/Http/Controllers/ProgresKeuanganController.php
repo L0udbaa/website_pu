@@ -21,14 +21,12 @@ class ProgresKeuanganController extends Controller
                 });
             });
 
-        $totalDeviasi = (clone $progresQuery)->sum('deviasi_keuangan');
-
         $progres = $progresQuery
             ->orderByDesc('tanggal_realisasi')
             ->paginate(10)
             ->withQueryString();
 
-        return view('progres-keuangan.index', compact('progres', 'kegiatan', 'totalDeviasi'));
+        return view('progres-keuangan.index', compact('progres', 'kegiatan'));
     }
 
     public function create(?Kegiatan $kegiatan = null)

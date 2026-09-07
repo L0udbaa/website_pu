@@ -38,26 +38,6 @@
         </div>
     @endif
 
-    <div class="row g-3 mt-1">
-        <div class="col-12 col-md-4">
-            <article class="metric-card {{ $totalDeviasi < 0 ? 'metric-danger' : 'metric-success' }}">
-                <div class="metric-top">
-                    <span class="metric-label">Total Deviasi Keuangan</span>
-                    <span class="metric-icon"><i class="bi bi-calculator" aria-hidden="true"></i></span>
-                </div>
-                <div class="metric-value metric-value-currency">
-                    Rp {{ number_format(abs($totalDeviasi), 0, ',', '.') }}
-                </div>
-                <div class="metric-meta">
-                    <span class="{{ $totalDeviasi < 0 ? 'text-danger' : 'text-success' }} fw-semibold">
-                        <i class="bi {{ $totalDeviasi < 0 ? 'bi-arrow-down-short' : 'bi-arrow-up-short' }}"></i>
-                        {{ $totalDeviasi < 0 ? 'Di bawah rencana' : 'Di atas rencana' }}
-                    </span>
-                </div>
-            </article>
-        </div>
-    </div>
-
     <section class="panel mt-3">
         <div class="panel-header">
             <div>

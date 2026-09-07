@@ -47,3 +47,4 @@ class ProgresFisik extends Model
         );
     }
 }
+ 

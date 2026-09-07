@@ -1,10 +1,14 @@
 <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
     <div class="sidebar-header">
         <a class="brand-mark" href="#" aria-label="Monitoring Progres Kementerian Pekerjaan Umum">
-            <img class="" width="60" src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
+            <span class="brand-logo">
+                <img src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
+            </span>
             <span class="brand-copy">
-            <span class="brand-title">KEMENTERIAN PEKERJAAN UMUM</span>
+                <span class="brand-kicker">KEMENTERIAN</span>
+                <span class="brand-title">PEKERJAAN UMUM</span>
                 <span class="brand-subtitle">Monitoring Progres</span>
+                <span class="brand-unit">Balai Pelaksanaan Jalan Nasional Maluku Utara</span>
             </span>
         </a>
     </div>

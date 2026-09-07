@@ -81,6 +81,23 @@ a {
   color: #ffffff;
 }
 
+.brand-logo {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.brand-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .brand-icon,
 .profile-avatar,
 .metric-icon,
@@ -100,29 +117,49 @@ a {
 }
 
 .brand-copy,
+.brand-kicker,
 .brand-title,
 .brand-subtitle,
+.brand-unit,
 .nav-text {
   min-width: 0;
   transition: opacity 0.16s ease, width 0.16s ease;
 }
 
 .brand-title,
-.brand-subtitle {
+.brand-kicker,
+.brand-subtitle,
+.brand-unit {
   display: block;
   line-height: 1.2;
-  white-space: nowrap;
 }
 
 .brand-title {
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   font-weight: 800;
+  letter-spacing: 0.02em;
   white-space: normal;
+}
+
+.brand-kicker {
+  color: #fbbf24;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
 .brand-subtitle {
   color: #9ca3af;
   font-size: 0.78rem;
+  margin-top: 0.18rem;
+}
+
+.brand-unit {
+  color: #c5cad3;
+  font-size: 0.62rem;
+  line-height: 1.15;
+  margin-top: 0.18rem;
+  white-space: normal;
 }
 
 .sidebar-nav {

@@ -5,8 +5,8 @@
         <img src="{{ asset('logo-pupr.png') }}" width="48" height="48" style="object-fit: contain; flex-shrink: 0;" alt="Logo Kementerian Pekerjaan Umum">
         <span>
             <strong style="font-size: 0.95rem; letter-spacing: 0.02em; line-height: 1.2;">KEMENTERIAN PEKERJAAN UMUM</strong>
-            <span class="fw-semibold text-secondary" style="font-size: 0.82rem; line-height: 1.25; margin-top: 2px;">Badan Pelaksanaan Jalan Nasional Maluku Utara</span>
             <small class="text-muted" style="font-size: 0.76rem; margin-top: 2px;">Monitoring Progres</small>
+            <span class="fw-semibold text-secondary" style="font-size: 0.82rem; line-height: 1.25; margin-top: 2px;">Balai Pelaksanaan Jalan Nasional Maluku Utara</span>
         </span>
     </a>
 
@@ -116,7 +116,7 @@
     {{-- Footer (Template Standard) --}}
     <div class="auth-footer">
         <small class="text-muted d-block">&copy; {{ date('Y') }} Kementerian Pekerjaan Umum</small>
-        <small class="text-muted" style="font-size: 0.78rem;">Badan Pelaksanaan Jalan Nasional Maluku Utara</small>
+        <small class="text-muted" style="font-size: 0.78rem;">Balai Pelaksanaan Jalan Nasional Maluku Utara</small>
     </div>
 
     @push('scripts')
