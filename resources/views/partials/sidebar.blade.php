@@ -1,10 +1,14 @@
 <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
     <div class="sidebar-header">
-        <a class="brand-mark" href="#" aria-label="Monitoring Progres PUPR">
-            <img class="" width="60" src="{{ asset('logo-pupr.png') }}" alt="">
+        <a class="brand-mark" href="#" aria-label="Monitoring Progres Kementerian Pekerjaan Umum">
+            <span class="brand-logo">
+                <img src="{{ asset('logo-pupr.png') }}" alt="Logo Kementerian Pekerjaan Umum">
+            </span>
             <span class="brand-copy">
-                <span class="brand-title">PUPR</span>
+                <span class="brand-kicker">KEMENTERIAN</span>
+                <span class="brand-title">PEKERJAAN UMUM</span>
                 <span class="brand-subtitle">Monitoring Progres</span>
+                <span class="brand-unit">Balai Pelaksanaan Jalan Nasional Maluku Utara</span>
             </span>
         </a>
     </div>
@@ -36,13 +40,8 @@
 
     <div class="sidebar-user">
         <img class="avatar-img avatar-md sidebar-user-avatar" src="{{ asset('assets/images/avatar/avatar.jpg') }}"
-            alt="User">
-        <strong>User</strong>
-        <small>Active Workspace</small>
-    </div>
-
-    <div class="sidebar-footer">
-        <span class="status-dot"></span>
-        <span class="sidebar-footer-text">System running smoothly</span>
+            alt="{{ auth()->user()->nama }}">
+        <strong>{{ auth()->user()->nama }}</strong>
+        <small>{{ ucfirst(auth()->user()->role) }} Account</small>
     </div>
 </aside>

@@ -3,172 +3,346 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="page-heading">
+    <div class="dashboard-page">
+    {{-- Page Heading (Template Standard) --}}
+    <div class="page-heading dashboard-hero">
         <div class="page-heading-copy">
             <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
             <div>
-                <p class="eyebrow mb-1">Monitoring Progres</p>
-                <h1 class="h3 mb-1">Dashboard</h1>
-                <p class="text-muted mb-0">Ringkasan kegiatan dan capaian progres terbaru.</p>
+                <p class="eyebrow mb-1">Balai Pelaksanaan Jalan Nasional Maluku Utara</p>
+                <h1 class="h3 mb-1">Dashboard Monitoring</h1>
+                <p class="text-muted mb-0">Ringkasan capaian fisik, penyerapan keuangan, dan evaluasi kegiatan infrastruktur.</p>
             </div>
         </div>
         <div class="heading-actions">
-            <a class="btn btn-primary btn-sm" href="{{ route('kegiatan.create') }}"><i class="bi bi-plus-lg" aria-hidden="true"></i> Tambah Kegiatan</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ route('rekapitulasi.index') }}">
+                <i class="bi bi-clipboard-data me-1" aria-hidden="true"></i> Rekapitulasi
+            </a>
+            <a class="btn btn-primary btn-sm" href="{{ route('kegiatan.create') }}">
+                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Tambah Kegiatan
+            </a>
         </div>
     </div>
 
-    <section class="dashboard-metrics mt-1" aria-label="Ringkasan dashboard">
-        <div>
+    {{-- 4 Metric Cards (Template Standard Grid) --}}
+    <section class="row g-3 dashboard-metrics" aria-label="Ringkasan dashboard">
+        {{-- Total Kegiatan --}}
+        <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-primary">
-                <div class="metric-top"><span class="metric-label">Total Kegiatan</span><span class="metric-icon"><i class="bi bi-kanban" aria-hidden="true"></i></span></div>
-                <div class="metric-value">{{ $jumlahKegiatan }}</div>
-                <div class="metric-meta"><span>proyek terdaftar</span></div>
+                <div class="metric-top">
+                    <span class="metric-label">Total Kegiatan</span>
+                    <span class="metric-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
+                </div>
+                <div class="metric-value fs-2 lh-1">{{ $jumlahKegiatan }}</div>
+                <div class="metric-meta">
+                    <span class="text-primary fw-semibold">{{ $jumlahKegiatan }} Kegiatan</span>
+                    <span>terdaftar aktif</span>
+                </div>
             </article>
         </div>
-        <div>
+
+        {{-- Realisasi Fisik --}}
+        <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-success">
-                <div class="metric-top"><span class="metric-label">Progres Fisik</span><span class="metric-icon"><i class="bi bi-bricks" aria-hidden="true"></i></span></div>
-                <div class="metric-value">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
-                <div class="metric-meta"><span>realisasi kumulatif</span></div>
+                <div class="metric-top">
+                    <span class="metric-label">Realisasi Fisik</span>
+                    <span class="metric-icon"><i class="bi bi-tools" aria-hidden="true"></i></span>
+                </div>
+                <div class="metric-value fs-2 lh-1">{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</div>
+                <div class="metric-meta">
+                    @if ($deviasiFisik > 0)
+                        <span class="text-success fw-semibold"><i class="bi bi-arrow-up-short"></i>+{{ number_format($deviasiFisik, 2, ',', '.') }}%</span>
+                        <span>deviasi positif</span>
+                    @elseif ($deviasiFisik < 0)
+                        <span class="text-danger fw-semibold"><i class="bi bi-arrow-down-short"></i>{{ number_format($deviasiFisik, 2, ',', '.') }}%</span>
+                        <span>deviasi minus</span>
+                    @else
+                        <span class="text-muted fw-semibold">0,00%</span>
+                        <span>sesuai rencana</span>
+                    @endif
+                </div>
             </article>
         </div>
-        <div>
+
+        {{-- Realisasi Keuangan --}}
+        <div class="col-12 col-sm-6 col-xl-3">
             <article class="metric-card metric-warning">
-                <div class="metric-top"><span class="metric-label">Realisasi Keuangan</span><span class="metric-icon"><i class="bi bi-cash-coin" aria-hidden="true"></i></span></div>
-                <div class="metric-value">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</div>
-                <div class="metric-meta"><span>realisasi kumulatif</span></div>
+                <div class="metric-top">
+                    <span class="metric-label">Realisasi Keuangan</span>
+                    <span class="metric-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></span>
+                </div>
+                <div class="metric-value metric-value-currency fs-4 lh-1">
+                    Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}
+                </div>
+                <div class="metric-meta">
+                    @if ($deviasiKeuangan >= 0)
+                        <span class="text-success fw-semibold"><i class="bi bi-arrow-up-short"></i>+Rp {{ number_format($deviasiKeuangan, 0, ',', '.') }}</span>
+                        <span>di atas target</span>
+                    @else
+                        <span class="text-danger fw-semibold"><i class="bi bi-arrow-down-short"></i>-Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}</span>
+                        <span>selisih target</span>
+                    @endif
+                </div>
             </article>
         </div>
-        <div>
-            <article class="metric-card metric-danger">
-                <div class="metric-top"><span class="metric-label">Deviasi Fisik</span><span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span></div>
-                <div class="metric-value">{{ $deviasiFisik >= 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%</div>
-                <div class="metric-meta"><span>realisasi dibanding rencana</span></div>
-            </article>
-        </div>
-        <div>
-            <article class="metric-card metric-danger">
-                <div class="metric-top"><span class="metric-label">Deviasi Keuangan</span><span class="metric-icon"><i class="bi bi-arrow-left-right" aria-hidden="true"></i></span></div>
-                <div class="metric-value">{{ $deviasiKeuangan >= 0 ? '+' : '-' }} Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}</div>
-                <div class="metric-meta"><span>realisasi dibanding rencana</span></div>
+
+        {{-- Kelengkapan Data Form --}}
+        <div class="col-12 col-sm-6 col-xl-3">
+            <article class="metric-card {{ $kegiatanBelumLengkap->count() > 0 ? 'metric-danger' : 'metric-success' }}">
+                <div class="metric-top">
+                    <span class="metric-label">Kelengkapan Data</span>
+                    <span class="metric-icon">
+                        <i class="bi {{ $kegiatanBelumLengkap->count() > 0 ? 'bi-exclamation-triangle' : 'bi-shield-check' }}" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="metric-value fs-2 lh-1">{{ $kegiatanBelumLengkap->count() }}</div>
+                <div class="metric-meta">
+                    @if ($kegiatanBelumLengkap->count() > 0)
+                        <span class="text-danger fw-semibold">{{ $kegiatanBelumLengkap->count() }} Kegiatan</span>
+                        <span>perlu dilengkapi</span>
+                    @else
+                        <span class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>100%</span>
+                        <span>semua data lengkap</span>
+                    @endif
+                </div>
             </article>
         </div>
     </section>
 
+    {{-- Mid Section: Capaian Progres & Perhatian --}}
     <section class="row g-3 mt-1">
+        {{-- Capaian Progres --}}
         <div class="col-12 col-xl-8">
-            <div class="panel h-100">
-                <div class="panel-header">
+            <div class="panel h-100 dashboard-panel">
+                <div class="panel-header d-flex justify-content-between align-items-center">
                     <div>
-                        <h2 class="h5 mb-1 section-title"><i class="bi bi-speedometer2" aria-hidden="true"></i><span>Capaian Progres</span></h2>
-                        <p class="text-muted mb-0">Gambaran cepat pencapaian proyek secara keseluruhan.</p>
+                        <h2 class="h5 mb-1 section-title">
+                            <i class="bi bi-graph-up-arrow me-2 text-primary" aria-hidden="true"></i>
+                            <span>Capaian Progres Kumulatif</span>
+                        </h2>
+                        <p class="text-muted mb-0">Perbandingan realisasi dan rencana progres kegiatan secara terpadu.</p>
                     </div>
-                    <a class="btn btn-light btn-sm" href="{{ route('rekapitulasi.index') }}">Buka Rekap</a>
+                    <a class="btn btn-light btn-sm" href="{{ route('rekapitulasi.index') }}">
+                        Buka Rekapitulasi <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
                 </div>
-                <div class="dashboard-progress-list">
-                    <div class="dashboard-progress-item">
-                        <div class="d-flex justify-content-between gap-3 mb-2"><span class="fw-semibold">Capaian Fisik</span><strong>{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong></div>
-                        <div class="progress" role="progressbar" aria-label="Capaian fisik" aria-valuenow="{{ $persentaseFisik }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-primary" style="width: {{ $persentaseFisik }}%"></div></div>
+
+                {{-- Progress Summary Bars --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-6">
+                        <div class="p-3 border rounded-3 bg-body-tertiary dashboard-progress-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold small text-uppercase text-muted">Progres Fisik</span>
+                                <span class="badge text-bg-primary fw-bold">{{ number_format($persentaseFisik, 1, ',', '.') }}%</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 10px;" role="progressbar" aria-valuenow="{{ $persentaseFisik }}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary" style="width: {{ $persentaseFisik }}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Rencana: <strong>{{ number_format($totalRencanaFisik, 2, ',', '.') }}%</strong></span>
+                                <span>Realisasi: <strong>{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</strong></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="dashboard-progress-item">
-                        <div class="d-flex justify-content-between gap-3 mb-2"><span class="fw-semibold">Capaian Keuangan</span><strong class="text-success">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong></div>
-                        <div class="progress" role="progressbar" aria-label="Capaian keuangan" aria-valuenow="{{ $persentaseKeuangan }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-success" style="width: {{ $persentaseKeuangan }}%"></div></div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="p-3 border rounded-3 bg-body-tertiary dashboard-progress-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold small text-uppercase text-muted">Realisasi Keuangan</span>
+                                <span class="badge text-bg-success fw-bold">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</span>
+                            </div>
+                            <div class="progress mb-2" style="height: 10px;" role="progressbar" aria-valuenow="{{ $persentaseKeuangan }}" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-success" style="width: {{ $persentaseKeuangan }}%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Rencana: <strong>Rp {{ number_format($totalRencanaKeuangan, 0, ',', '.') }}</strong></span>
+                                <span>Realisasi: <strong>Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Highlight Metrics Summary --}}
+                <div class="row g-3">
+                    <div class="col-12 col-sm-4">
+                        <div class="p-3 border rounded-3 text-center">
+                            <small class="text-muted text-uppercase d-block fw-semibold mb-1">Status Deviasi Fisik</small>
+                            <h4 class="fs-5 mb-0 fw-bold {{ $deviasiFisik > 0 ? 'text-success' : ($deviasiFisik < 0 ? 'text-danger' : 'text-muted') }}">
+                                {{ $deviasiFisik > 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%
+                            </h4>
+                            <small class="text-muted">{{ $deviasiFisik > 0 ? 'Di atas rencana' : ($deviasiFisik < 0 ? 'Perlu percepatan' : 'Sesuai jadwal') }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="p-3 border rounded-3 text-center">
+                            <small class="text-muted text-uppercase d-block fw-semibold mb-1">Status Deviasi Keuangan</small>
+                            <h4 class="dashboard-summary-value fs-5 mb-0 fw-bold {{ $deviasiKeuangan >= 0 ? 'text-success' : 'text-danger' }}">
+                                {{ $deviasiKeuangan >= 0 ? '+' : '-' }}Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}
+                            </h4>
+                            <small class="text-muted">{{ $deviasiKeuangan >= 0 ? 'Optimal' : 'Sisa Alokasi' }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="p-3 border rounded-3 text-center">
+                            <small class="text-muted text-uppercase d-block fw-semibold mb-1">Total Pagu Kegiatan</small>
+                            <h4 class="dashboard-summary-value fs-5 mb-0 fw-bold text-primary">
+                                Rp {{ number_format($kegiatan->sum('anggaran'), 0, ',', '.') }}
+                            </h4>
+                            <small class="text-muted">{{ $kegiatan->count() }} dari {{ $jumlahKegiatan }} kegiatan terbaru</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- Activity List / Perhatian --}}
         <div class="col-12 col-xl-4">
-            <div class="panel h-100">
+            <div class="panel h-100 dashboard-panel dashboard-attention-panel">
                 <div class="panel-header">
                     <div>
-                        <h2 class="h5 mb-1 section-title"><i class="bi bi-lightning-charge" aria-hidden="true"></i><span>Perhatian</span></h2>
-                        <p class="text-muted mb-0">Form kegiatan dan progres yang belum diisi.</p>
+                        <h2 class="h5 mb-1 section-title">
+                            <i class="bi bi-exclamation-triangle text-warning me-2" aria-hidden="true"></i>
+                            <span>Perhatian & Tindak Lanjut</span>
+                        </h2>
+                        <p class="text-muted mb-0">Form kegiatan atau progres yang belum diisi.</p>
                     </div>
                 </div>
-                <div class="dashboard-attention">
-                    <div class="dashboard-attention-icon"><i class="bi bi-clipboard-x" aria-hidden="true"></i></div>
-                    <strong>{{ $kegiatanBelumLengkap->count() }}</strong>
-                    <span>kegiatan memiliki form yang belum lengkap</span>
-                </div>
+
                 @if ($kegiatanBelumLengkap->isNotEmpty())
-                    <div class="dashboard-missing-list">
-                        @foreach ($kegiatanBelumLengkap as $item)
-                            <div class="dashboard-missing-item">
-                                <div class="min-w-0">
-                                    <strong>{{ $item->kode_kegiatan }}</strong>
-                                    <span>{{ $item->nama_kegiatan }}</span>
-                                </div>
-                                <div class="dashboard-missing-actions">
-                                    @foreach ($item->missing_forms as $missingForm)
-                                        @if (in_array($missingForm, ['Data Utama', 'Lokasi', 'Tahun', 'Anggaran', 'PJ']))
-                                            <a href="{{ route('kegiatan.edit', $item) }}" class="badge text-bg-warning">{{ $missingForm }}</a>
-                                        @elseif ($missingForm === 'Fisik')
-                                            <a href="{{ route('progres-fisik.create') }}" class="badge text-bg-primary">Fisik</a>
-                                        @elseif ($missingForm === 'Keuangan')
-                                            <a href="{{ route('progres-keuangan.create', $item) }}" class="badge text-bg-success">Keuangan</a>
-                                        @endif
-                                    @endforeach
+                    <div class="activity-list">
+                        @foreach ($kegiatanBelumLengkap->take(5) as $item)
+                            <div class="activity-item">
+                                <span class="activity-dot bg-warning"></span>
+                                <div class="w-100 min-w-0">
+                                    <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                                        <strong class="text-truncate small" title="{{ $item->nama_kegiatan }}">{{ $item->nama_kegiatan }}</strong>
+                                        <span class="badge dashboard-code-badge text-bg-light border text-muted">{{ $item->kode_kegiatan }}</span>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        @foreach ($item->missing_forms as $missingForm)
+                                            @if (in_array($missingForm, ['Data Utama', 'Lokasi', 'Tahun', 'Anggaran', 'PJ']))
+                                               <a href="{{ route('kegiatan.edit', $item) }}" class="badge text-bg-warning text-decoration-none small" title="Lengkapi {{ $missingForm }}">
+                                                   <i class="bi bi-pencil-square"></i> {{ $missingForm }}
+                                               </a>
+                                            @elseif ($missingForm === 'Fisik')
+                                               <a href="{{ route('progres-fisik.create') }}" class="badge text-bg-primary text-decoration-none small" title="Isi Progres Fisik">
+                                                   <i class="bi bi-bricks"></i> Fisik
+                                               </a>
+                                            @elseif ($missingForm === 'Keuangan')
+                                               <a href="{{ route('progres-keuangan.create', $item) }}" class="badge text-bg-success text-decoration-none small" title="Isi Progres Keuangan">
+                                                   <i class="bi bi-cash-coin"></i> Keuangan
+                                               </a>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
                     </div>
+                    @if ($kegiatanBelumLengkap->count() > 5)
+                        <div class="text-center mt-3 pt-2 border-top">
+                            <small class="text-muted">+{{ $kegiatanBelumLengkap->count() - 5 }} kegiatan lainnya memerlukan kelengkapan data.</small>
+                        </div>
+                    @endif
                 @else
-                    <p class="text-success text-center mb-0"><i class="bi bi-check-circle" aria-hidden="true"></i> Semua form progres sudah diisi.</p>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <span class="activity-dot bg-success"></span>
+                            <div>
+                                <p class="mb-1 fw-semibold text-success">Seluruh Data Kegiatan Lengkap</p>
+                                <p class="text-muted small mb-0">Semua form progres fisik, keuangan, dan data kegiatan telah diisi.</p>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
     </section>
 
-    <section class="panel mt-3">
-        <div class="panel-header">
+    {{-- Bottom Table: Kegiatan Infrastruktur Terbaru --}}
+    <section class="panel mt-3 dashboard-panel dashboard-table-panel">
+        <div class="panel-header d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="h5 mb-1 section-title"><i class="bi bi-list-check" aria-hidden="true"></i><span>Kegiatan Terbaru</span></h2>
-                <p class="text-muted mb-0">Daftar kegiatan yang terakhir ditambahkan.</p>
+                <h2 class="h5 mb-1 section-title">
+                    <i class="bi bi-list-check me-2 text-primary" aria-hidden="true"></i>
+                    <span>Kegiatan Infrastruktur Terbaru</span>
+                </h2>
+                <p class="text-muted mb-0">Daftar kegiatan pekerjaan jalan dan jembatan yang terakhir ditambahkan.</p>
             </div>
-            <a class="btn btn-outline-secondary btn-sm" href="{{ route('kegiatan.index') }}">Lihat Semua</a>
+            <a class="btn btn-outline-secondary btn-sm" href="{{ route('kegiatan.index') }}">
+                Lihat Semua Kegiatan <i class="bi bi-arrow-right ms-1"></i>
+            </a>
         </div>
+
         <div class="table-responsive">
             <table class="table align-middle mb-0">
-                <thead><tr><th>Kode</th><th>Kegiatan</th><th>Lokasi</th><th>Tahun</th><th class="text-end">Anggaran</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th scope="col">Kode & Nama Kegiatan</th>
+                        <th scope="col">Lokasi</th>
+                        <th scope="col">Tahun</th>
+                        <th scope="col" class="text-end">Pagu Anggaran</th>
+                        <th scope="col" class="text-center">Progres Fisik</th>
+                        <th scope="col" class="text-center">Realisasi Keuangan</th>
+                        <th scope="col" class="text-end">Aksi</th>
+                    </tr>
+                </thead>
                 <tbody>
                     @forelse ($kegiatan as $item)
+                        @php
+                            $latestFisik = $item->progresFisik->sortByDesc('id')->first();
+                            $latestKeuangan = $item->progresKeuangan->sortByDesc('id')->first();
+                        @endphp
                         <tr>
-                            <td><span class="fw-semibold">{{ $item->kode_kegiatan }}</span></td>
-                            <td>{{ $item->nama_kegiatan }}</td>
-                            <td>{{ $item->lokasi ?: '-' }}</td>
-                            <td>{{ $item->tahun }}</td>
-                            <td class="text-end">Rp {{ number_format($item->anggaran, 0, ',', '.') }}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge text-bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ $item->kode_kegiatan }}</span>
+                                    <span class="fw-semibold text-truncate" style="max-width: 260px;" title="{{ $item->nama_kegiatan }}">{{ $item->nama_kegiatan }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-muted small">
+                                    <i class="bi bi-geo-alt text-danger me-1"></i>{{ $item->lokasi ?: '-' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge text-bg-light border">{{ $item->tahun }}</span>
+                            </td>
+                            <td class="text-end fw-bold">
+                                Rp {{ number_format($item->anggaran, 0, ',', '.') }}
+                            </td>
+                            <td class="text-center">
+                                @if ($latestFisik)
+                                    <span class="badge dashboard-status-badge dashboard-status-primary text-bg-primary bg-opacity-15 text-primary border border-primary border-opacity-25">
+                                        {{ number_format($latestFisik->realisasi_fisik, 1, ',', '.') }}%
+                                    </span>
+                                @else
+                                    <span class="text-muted small">-</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($latestKeuangan)
+                                    <span class="badge dashboard-status-badge dashboard-status-success text-bg-success bg-opacity-15 text-success border border-success border-opacity-25">
+                                        Rp {{ number_format($latestKeuangan->realisasi_keuangan, 0, ',', '.') }}
+                                    </span>
+                                @else
+                                    <span class="text-muted small">-</span>
+                                @endif
+                            </td>
+                            <td class="text-end">
+                                <a class="btn btn-light btn-sm" href="{{ route('kegiatan.edit', $item) }}" title="Lihat & Edit">
+                                    <i class="bi bi-pencil-square me-1"></i> Detail
+                                </a>
+                            </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="text-center text-muted py-4">Belum ada kegiatan.</td></tr>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">Belum ada kegiatan yang terdaftar.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </section>
-
-    <style>
-        .dashboard-metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
-        .dashboard-metrics > div { min-width: 0; }
-        .dashboard-metrics .metric-card { height: 100%; min-width: 0; }
-        .dashboard-metrics .metric-value { font-size: 1.35rem; overflow-wrap: anywhere; }
-        .dashboard-progress-list { display: grid; gap: 1.25rem; padding-top: .5rem; }
-        .dashboard-progress-item strong { color: var(--admin-text); }
-        .dashboard-progress-item .progress { height: 10px; background: var(--admin-border); }
-        .dashboard-attention { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 155px; text-align: center; }
-        .dashboard-attention-icon { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: .6rem; border-radius: 50%; background: #fef3c7; color: #b45309; }
-        .dashboard-attention strong { color: var(--admin-text); font-size: 1.8rem; line-height: 1; }
-        .dashboard-attention span { margin-top: .4rem; color: var(--admin-muted); font-size: .85rem; }
-        html[data-theme="dark"] .dashboard-attention-icon { background: #422006; color: #fbbf24; }
-        .dashboard-missing-list { display: grid; gap: .6rem; margin-top: 1rem; max-height: 220px; overflow-y: auto; }
-        .dashboard-missing-item { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .7rem; border: 1px solid var(--admin-border); border-radius: 8px; background: var(--admin-surface-soft); }
-        .dashboard-missing-item strong, .dashboard-missing-item span { display: block; }
-        .dashboard-missing-item strong { color: var(--admin-text); font-size: .85rem; }
-        .dashboard-missing-item span { margin-top: .15rem; overflow: hidden; color: var(--admin-muted); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
-        .dashboard-missing-actions { display: flex; flex: 0 0 auto; gap: .3rem; }
-        .dashboard-missing-actions .badge { text-decoration: none; }
-        @media (max-width: 1199.98px) { .dashboard-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (max-width: 767.98px) { .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 479.98px) { .dashboard-metrics { grid-template-columns: 1fr; } }
-    </style>
+    </div>
 @endsection

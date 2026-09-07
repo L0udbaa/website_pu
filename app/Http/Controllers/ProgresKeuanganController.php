@@ -12,14 +12,16 @@ class ProgresKeuanganController extends Controller
 {
     public function index(Request $request, ?Kegiatan $kegiatan = null)
     {
-        $progres = ProgresKeuangan::with('kegiatan')
+        $progresQuery = ProgresKeuangan::with('kegiatan')
             ->when($kegiatan, fn ($query, $kegiatan) => $query->where('kegiatan_id', $kegiatan->id))
             ->when($request->search, function ($query, $search) {
                 $query->whereHas('kegiatan', function ($q) use ($search) {
                     $q->where('nama_kegiatan', 'like', "%{$search}%")
                         ->orWhere('kode_kegiatan', 'like', "%{$search}%");
                 });
-            })
+            });
+
+        $progres = $progresQuery
             ->orderByDesc('tanggal_realisasi')
             ->paginate(10)
             ->withQueryString();
