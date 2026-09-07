@@ -8,6 +8,26 @@
     <meta name="description" content="Monitoring Progres Kementerian Pekerjaan Umum">
     <title>{{ config('app.name', 'Monitoring Progres') }} | Kementerian Pekerjaan Umum</title>
 
+<<<<<<< HEAD
+        <!-- Fonts & Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans text-gray-900 antialiased">
+        <!-- TAMBAHKAN CLASS BACKGROUND DI SINI -->
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+            <div>
+                <a href="/">
+                    <x-application-logo class="w-20 h-20 fill-current text-indigo-400" />
+                </a>
+            </div>
+
+            <div class="w-full sm:max-w-md mt-6">
+                {{ $slot }}
+            </div>
+        </div>
+    </body>
+</html>
+=======
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -173,3 +193,4 @@
 </body>
 
 </html>
+>>>>>>> fc8faea618f5673033e451bdf7c9327f3f2ecf36
