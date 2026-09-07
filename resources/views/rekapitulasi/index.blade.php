@@ -24,14 +24,14 @@
             <form action="{{ route('rekapitulasi.index') }}" method="GET" class="row g-3 align-items-end mt-1">
 
                 {{-- Kegiatan --}}
-                <div class="col-md-3">
+                <div class="col-md-4">
 
                     <label class="rekap-label" for="kegiatan_id">
                         <i class="bi bi-list-ul" aria-hidden="true"></i>
                         Kegiatan
                     </label>
 
-                    <select name="kegiatan_id" id="kegiatan_id" class="form-select rekap-input">
+                    <select name="kegiatan_id" id="kegiatan_id" class="form-select rekap-input" onchange="this.form.submit()">
                         <option value="">Semua Kegiatan</option>
 
                         @foreach ($kegiatanList as $kg)
@@ -71,7 +71,7 @@
                 </div>
 
                 {{-- Tombol --}}
-                <div class="col-md-3">
+                <div class="col-md-2">
 
                     <button type="submit" class="btn rekap-btn-primary w-100">
                         <i class="bi bi-search" aria-hidden="true"></i>
@@ -241,6 +241,158 @@
 
         </div>
 
+        @if ($selectedKegiatan)
+            <div class="rekap-card mb-3 mt-3">
+                <div class="rekap-card-header">
+                    <div class="rekap-icon-box rekap-icon-purple">
+                        <i class="bi bi-activity" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="rekap-card-heading">
+                            Detail Progres Fisik: {{ $selectedKegiatan->kode_kegiatan }}
+                        </div>
+                        <div class="rekap-card-subheading">
+                            {{ $selectedKegiatan->nama_kegiatan }}
+                        </div>
+                    </div>
+                </div>
+
+                @if ($detailFisik->isNotEmpty())
+                    @php
+                        $totalRencanaFisikDetail = $detailFisik->sum('rencana_fisik');
+                        $totalRealisasiFisikDetail = $detailFisik->sum('realisasi_fisik');
+                        $totalDeviasiFisikDetail = $totalRealisasiFisikDetail - $totalRencanaFisikDetail;
+                        $rencanaPersenTotalFisik = $detailFisik->avg('rencana_fisik');
+                        $realisasiPersenTotalFisik = $detailFisik->avg('realisasi_fisik');
+                        $tanggalRencanaFisikTotal = $detailFisik->max('tanggal_rencana');
+                        $tanggalRealisasiFisikTotal = $detailFisik->max('tanggal_realisasi');
+                    @endphp
+                    <div class="table-responsive mt-3">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal Rencana</th>
+                                    <th>Rencana (%)</th>
+                                    <th>Tanggal Realisasi</th>
+                                    <th>Realisasi (%)</th>
+                                    <th>Deviasi (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($detailFisik as $item)
+                                    <tr>
+                                        <td>{{ $item->tanggal_rencana ? \Carbon\Carbon::parse($item->tanggal_rencana)->format('d-m-Y') : '-' }}</td>
+                                        <td>{{ number_format($item->rencana_fisik, 2, ',', '.') }}%</td>
+                                        <td>{{ $item->tanggal_realisasi ? \Carbon\Carbon::parse($item->tanggal_realisasi)->format('d-m-Y') : '-' }}</td>
+                                        <td>{{ number_format($item->realisasi_fisik, 2, ',', '.') }}%</td>
+                                        <td>
+                                            <span class="badge {{ $item->deviasi_fisik < 0 ? 'text-bg-danger' : 'text-bg-success' }}">
+                                                {{ $item->deviasi_fisik >= 0 ? '+' : '' }}{{ number_format($item->deviasi_fisik, 2, ',', '.') }}%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="table-total-row">
+                                    <td class="fw-bold text-dark">Total</td>
+                                    <td class="fw-bold text-dark">{{ number_format($rencanaPersenTotalFisik, 2, ',', '.') }}%</td>
+                                    <td class="fw-bold text-dark">{{ $tanggalRencanaFisikTotal ? \Carbon\Carbon::parse($tanggalRencanaFisikTotal)->format('d-m-Y') : '-' }}</td>
+                                    <td class="fw-bold text-dark">{{ number_format($realisasiPersenTotalFisik, 2, ',', '.') }}%</td>
+                                    <td>
+                                        <span class="badge {{ $totalDeviasiFisikDetail < 0 ? 'text-bg-danger' : 'text-bg-success' }}">
+                                            {{ $totalDeviasiFisikDetail >= 0 ? '+' : '' }}{{ number_format($totalDeviasiFisikDetail, 2, ',', '.') }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p class="text-muted mb-0 mt-3">Belum ada data progres fisik untuk kegiatan ini.</p>
+                @endif
+            </div>
+
+            <div class="rekap-card mt-3">
+                <div class="rekap-card-header">
+                    <div class="rekap-icon-box rekap-icon-green">
+                        <i class="bi bi-wallet2" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="rekap-card-heading">
+                            Detail Progres Keuangan: {{ $selectedKegiatan->kode_kegiatan }}
+                        </div>
+                        <div class="rekap-card-subheading">
+                            {{ $selectedKegiatan->nama_kegiatan }}
+                        </div>
+                    </div>
+                </div>
+
+                @if ($detailKeuangan->isNotEmpty())
+                    @php
+                        $totalNilaiKontrakDetail = $detailKeuangan->sum('nilai_kontrak');
+                        $totalRencanaKeuanganDetail = $detailKeuangan->sum('rencana_keuangan');
+                        $totalRealisasiKeuanganDetail = $detailKeuangan->sum('realisasi_keuangan');
+                        $totalDeviasiKeuanganDetail = $totalRealisasiKeuanganDetail - $totalRencanaKeuanganDetail;
+                        $rencanaPersenTotalKeuangan = $detailKeuangan->avg('rencana_persen');
+                        $realisasiPersenTotalKeuangan = $detailKeuangan->avg('realisasi_persen');
+                        $tanggalRencanaKeuanganTotal = $detailKeuangan->max('tanggal_rencana');
+                        $tanggalRealisasiKeuanganTotal = $detailKeuangan->max('tanggal_realisasi');
+                    @endphp
+                    <div class="table-responsive mt-3">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal Rencana</th>
+                                    <th>Rencana (%)</th>
+                                    <th>Nilai Kontrak</th>
+                                    <th>Tanggal Realisasi</th>
+                                    <th>Realisasi (%)</th>
+                                    <th>Rencana (Rp)</th>
+                                    <th>Realisasi (Rp)</th>
+                                    <th>Deviasi (Rp)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($detailKeuangan as $item)
+                                    <tr>
+                                        <td>{{ $item->tanggal_rencana ? \Carbon\Carbon::parse($item->tanggal_rencana)->format('d-m-Y') : '-' }}</td>
+                                        <td>{{ number_format($item->rencana_persen, 2, ',', '.') }}%</td>
+                                        <td>Rp {{ number_format($item->nilai_kontrak, 0, ',', '.') }}</td>
+                                        <td>{{ $item->tanggal_realisasi ? \Carbon\Carbon::parse($item->tanggal_realisasi)->format('d-m-Y') : '-' }}</td>
+                                        <td>{{ number_format($item->realisasi_persen, 2, ',', '.') }}%</td>
+                                        <td>Rp {{ number_format($item->rencana_keuangan, 0, ',', '.') }}</td>
+                                        <td>Rp {{ number_format($item->realisasi_keuangan, 0, ',', '.') }}</td>
+                                        <td>
+                                            <span class="badge {{ $item->deviasi_keuangan < 0 ? 'text-bg-danger' : 'text-bg-success' }}">
+                                                Rp {{ number_format($item->deviasi_keuangan, 0, ',', '.') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr class="table-total-row">
+                                    <td class="fw-bold text-dark">
+                                        <span class="total-label">Total</span>
+                                    </td>
+                                    <td class="fw-bold text-dark">{{ number_format($rencanaPersenTotalKeuangan, 2, ',', '.') }}%</td>
+                                    <td class="fw-bold text-dark">Rp {{ number_format($totalNilaiKontrakDetail, 0, ',', '.') }}</td>
+                                    <td class="fw-bold text-dark">-</td>
+                                    <td class="fw-bold text-dark">{{ number_format($realisasiPersenTotalKeuangan, 2, ',', '.') }}%</td>
+                                    <td class="fw-bold text-dark">Rp {{ number_format($totalRencanaKeuanganDetail, 0, ',', '.') }}</td>
+                                    <td class="fw-bold text-dark">Rp {{ number_format($totalRealisasiKeuanganDetail, 0, ',', '.') }}</td>
+                                    <td>
+                                        <span class="badge {{ $totalDeviasiKeuanganDetail < 0 ? 'text-bg-danger' : 'text-bg-success' }}">
+                                            Rp {{ number_format($totalDeviasiKeuanganDetail, 0, ',', '.') }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p class="text-muted mb-0 mt-3">Belum ada data progres keuangan untuk kegiatan ini.</p>
+                @endif
+            </div>
+        @endif
+
     </div>
 
 
@@ -312,6 +464,28 @@
         .rekap-btn-primary:hover {
             background: #4338ca;
             color: #fff;
+        }
+
+        .table-total-row {
+            background: #edf6ef;
+            border-top: 2px solid #cfe7d6;
+        }
+
+        .table-total-row td {
+            padding-top: 0.85rem;
+            padding-bottom: 0.85rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .total-label {
+            display: inline-block;
+            margin-bottom: 0.25rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #047857;
+            font-weight: 800;
         }
 
         .rekap-card-header {
