@@ -1,5 +1,5 @@
 <x-guest-layout>
-<<<<<<< HEAD
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-6 p-4 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 shadow-sm" :status="session('status')" />
 
@@ -234,4 +234,4 @@
     </script>
     @endpush
 </x-guest-layout>
->>>>>>> fc8faea618f5673033e451bdf7c9327f3f2ecf36
+
