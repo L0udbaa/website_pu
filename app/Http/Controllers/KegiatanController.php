@@ -90,6 +90,8 @@ class KegiatanController extends Controller
      */
     public function destroy(Kegiatan $kegiatan): RedirectResponse
     {
+        $kegiatan->progresFisik()->delete();
+        $kegiatan->progresKeuangan()->delete();
         $kegiatan->delete();
 
         return redirect()

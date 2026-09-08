@@ -259,11 +259,9 @@
 
                 @if ($detailFisik->isNotEmpty())
                     @php
-                        $totalRencanaFisikDetail = $detailFisik->sum('rencana_fisik');
-                        $totalRealisasiFisikDetail = $detailFisik->sum('realisasi_fisik');
-                        $totalDeviasiFisikDetail = $totalRealisasiFisikDetail - $totalRencanaFisikDetail;
-                        $rencanaPersenTotalFisik = $detailFisik->avg('rencana_fisik');
-                        $realisasiPersenTotalFisik = $detailFisik->avg('realisasi_fisik');
+                        $rencanaPersenTotalFisik = $detailFisik->sum('rencana_fisik');
+                        $realisasiPersenTotalFisik = $detailFisik->sum('realisasi_fisik');
+                        $totalDeviasiFisikDetail = $detailFisik->sum('deviasi_fisik');
                         $tanggalRencanaFisikTotal = $detailFisik->max('tanggal_rencana');
                         $tanggalRealisasiFisikTotal = $detailFisik->max('tanggal_realisasi');
                     @endphp
@@ -328,12 +326,12 @@
 
                 @if ($detailKeuangan->isNotEmpty())
                     @php
-                        $totalNilaiKontrakDetail = $detailKeuangan->sum('nilai_kontrak');
+                        $totalNilaiKontrakDetail = $detailKeuangan->first()->nilai_kontrak;
                         $totalRencanaKeuanganDetail = $detailKeuangan->sum('rencana_keuangan');
                         $totalRealisasiKeuanganDetail = $detailKeuangan->sum('realisasi_keuangan');
                         $totalDeviasiKeuanganDetail = $totalRealisasiKeuanganDetail - $totalRencanaKeuanganDetail;
-                        $rencanaPersenTotalKeuangan = $detailKeuangan->avg('rencana_persen');
-                        $realisasiPersenTotalKeuangan = $detailKeuangan->avg('realisasi_persen');
+                        $rencanaPersenTotalKeuangan = $detailKeuangan->sum('rencana_persen');
+                        $realisasiPersenTotalKeuangan = $detailKeuangan->sum('realisasi_persen');
                         $tanggalRencanaKeuanganTotal = $detailKeuangan->max('tanggal_rencana');
                         $tanggalRealisasiKeuanganTotal = $detailKeuangan->max('tanggal_realisasi');
                     @endphp
