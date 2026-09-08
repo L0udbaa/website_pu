@@ -30,20 +30,7 @@ class RekapitulasiController extends Controller
         // REKAP PROGRES FISIK
         // ==========================================
 
-        $rencanaFisikQuery = ProgresFisik::query()
-            ->latestPerKegiatan()
-            ->when($kegiatanId, function ($query) use ($kegiatanId) {
-                $query->where('kegiatan_id', $kegiatanId);
-            })
-            ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
-                $query->whereDate('tanggal_rencana', '>=', $tanggalAwal);
-            })
-            ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
-                $query->whereDate('tanggal_rencana', '<=', $tanggalAkhir);
-            });
-
-        $realisasiFisikQuery = ProgresFisik::query()
-            ->latestPerKegiatan()
+        $rekapFisikQuery = ProgresFisik::query()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })
@@ -54,28 +41,15 @@ class RekapitulasiController extends Controller
                 $query->whereDate('tanggal_realisasi', '<=', $tanggalAkhir);
             });
 
-        $totalRencanaFisik = $rencanaFisikQuery->sum('rencana_fisik');
-        $totalRealisasiFisik = $realisasiFisikQuery->sum('realisasi_fisik');
+        $totalRencanaFisik = (clone $rekapFisikQuery)->sum('rencana_fisik');
+        $totalRealisasiFisik = (clone $rekapFisikQuery)->sum('realisasi_fisik');
         $deviasiFisik = round($totalRealisasiFisik - $totalRencanaFisik, 2);
 
         // ==========================================
         // REKAP PROGRES KEUANGAN
         // ==========================================
 
-        $rencanaKeuanganQuery = ProgresKeuangan::query()
-            ->latestPerKegiatan()
-            ->when($kegiatanId, function ($query) use ($kegiatanId) {
-                $query->where('kegiatan_id', $kegiatanId);
-            })
-            ->when($tanggalAwal, function ($query) use ($tanggalAwal) {
-                $query->whereDate('tanggal_rencana', '>=', $tanggalAwal);
-            })
-            ->when($tanggalAkhir, function ($query) use ($tanggalAkhir) {
-                $query->whereDate('tanggal_rencana', '<=', $tanggalAkhir);
-            });
-
-        $realisasiKeuanganQuery = ProgresKeuangan::query()
-            ->latestPerKegiatan()
+        $rekapKeuanganQuery = ProgresKeuangan::query()
             ->when($kegiatanId, function ($query) use ($kegiatanId) {
                 $query->where('kegiatan_id', $kegiatanId);
             })
@@ -86,8 +60,8 @@ class RekapitulasiController extends Controller
                 $query->whereDate('tanggal_realisasi', '<=', $tanggalAkhir);
             });
 
-        $totalRencanaKeuangan = $rencanaKeuanganQuery->sum('rencana_keuangan');
-        $totalRealisasiKeuangan = $realisasiKeuanganQuery->sum('realisasi_keuangan');
+        $totalRencanaKeuangan = (clone $rekapKeuanganQuery)->sum('rencana_keuangan');
+        $totalRealisasiKeuangan = (clone $rekapKeuanganQuery)->sum('realisasi_keuangan');
         $deviasiKeuangan = round($totalRealisasiKeuangan - $totalRencanaKeuangan, 2);
 
         $detailFisik = ProgresFisik::query()

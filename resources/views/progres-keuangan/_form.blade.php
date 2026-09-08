@@ -220,10 +220,11 @@
         <input type="text"
             name="realisasi_keuangan"
             id="realisasi_keuangan"
-            class="form-control @error('realisasi_keuangan') is-invalid @enderror"
-            placeholder="Contoh: 35.000.000"
+            class="form-control financial-calculated-field @error('realisasi_keuangan') is-invalid @enderror"
+            placeholder="Otomatis dari realisasi (%)"
             inputmode="decimal"
             autocomplete="off"
+            readonly
             value="{{ $formatInputUang($realisasiKeuanganAwal) }}">
 
         @error('realisasi_keuangan')
@@ -323,6 +324,7 @@
     const nilaiKontrak = document.getElementById('nilai_kontrak');
     const kegiatanSelect = document.getElementById('kegiatan_id');
     const rencanaPersen = document.getElementById('rencana_persen');
+    const realisasiPersen = document.getElementById('realisasi_persen');
     const realisasiKeuangan = document.getElementById('realisasi_keuangan');
 
     const rencanaDisplay = document.getElementById('rencana_keuangan_display');
@@ -518,6 +520,27 @@
 
 
     /*
+     * Hitung nominal realisasi dari nilai kontrak dan persentasenya.
+     */
+    realisasiPersen.addEventListener('input', function () {
+
+        const kontrak = parseUang(nilaiKontrak.value);
+        const persen = parseFloat(this.value) || 0;
+        const realisasi = (kontrak * persen) / 100;
+
+        realisasiKeuangan.value = realisasi > 0
+            ? realisasi.toLocaleString('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            })
+            : '';
+
+        hitungPreview();
+
+    });
+
+
+    /*
      * Sebelum form dikirim:
      *
      * 1.000.000.000
@@ -545,6 +568,11 @@
     if (kegiatanSelect && kegiatanSelect.value) {
         sinkronkanNilaiKontrak();
     }
+
+    if (realisasiPersen.value) {
+        realisasiPersen.dispatchEvent(new Event('input'));
+    }
+
     hitungPreview();
 
 })();
