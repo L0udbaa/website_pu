@@ -104,7 +104,10 @@ html, body {
 .rekap-card,
 .rekap-select,
 .rekap-select-menu,
-.table-responsive {
+.table-responsive,
+.rekap-card-filter,
+.rekap-card-filter .row,
+.rekap-card-filter .col-md-4 {
     overflow: visible;
 }
 
@@ -484,11 +487,33 @@ html[data-theme="dark"] .dashboard-hero .btn-outline-secondary:focus {
     z-index: 1;
 }
 
+.rekap-card-filter {
+    overflow: visible !important;
+    transform: none !important;
+}
+
 .rekap-select {
     position: relative;
     width: 100%;
-    z-index: 60;
+    z-index: 1;
     overflow: visible;
+}
+
+.rekap-native-select {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 10px;
+    background-color: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.95rem;
+}
+
+.rekap-native-select:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 .2rem rgba(139, 92, 246, .18);
+    outline: none;
 }
 
 .rekap-select-trigger {
@@ -533,11 +558,8 @@ html[data-theme="dark"] .dashboard-hero .btn-outline-secondary:focus {
 }
 
 .rekap-select-menu {
-    position: absolute;
-    top: calc(100% + 0.45rem);
-    right: 0;
-    left: 0;
-    z-index: 9999;
+    position: fixed;
+    z-index: 999999 !important;
     max-height: 18rem;
     overflow-y: auto;
     overflow-x: hidden;
@@ -546,6 +568,7 @@ html[data-theme="dark"] .dashboard-hero .btn-outline-secondary:focus {
     border: 1px solid var(--border);
     border-radius: 14px;
     box-shadow: 0 18px 38px -18px rgba(15, 23, 42, 0.4), 0 0 0 1px var(--luxury-gold-soft);
+    transform: none !important;
 }
 
 .rekap-select-option {

@@ -14,7 +14,7 @@
         {{-- ==============================
          FILTER
     =============================== --}}
-        <div class="rekap-card mb-3">
+        <div class="rekap-card rekap-card-filter mb-3">
 
             <div class="rekap-card-title">
                 <i class="bi bi-funnel-fill" aria-hidden="true"></i>
@@ -37,50 +37,15 @@
                         Kegiatan
                     </label>
 
-                    <div class="rekap-select" x-data="{ open: false }" @click.outside="open = false">
-                        <button type="button" class="rekap-select-trigger" id="kegiatan_id_trigger"
-                            aria-controls="kegiatan_id_menu" :aria-expanded="open.toString()"
-                            @click="open = !open">
-                            <span>
-                                {{ $selectedKegiatanOption ? $selectedKegiatanOption->kode_kegiatan . ' — ' . $selectedKegiatanOption->nama_kegiatan : 'Semua Kegiatan' }}
-                            </span>
-                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
-                        </button>
-
-                        <div class="rekap-select-menu" id="kegiatan_id_menu" x-cloak x-show="open"
-                            x-transition.origin.top role="listbox" aria-labelledby="kegiatan_id_trigger">
-                            <button type="button"
-                                class="rekap-select-option {{ $kegiatanId ? '' : 'is-selected' }}"
-                                @click="$refs.native.value = ''; $refs.native.dispatchEvent(new Event('change', { bubbles: true })); open = false">
-                                <span>Semua Kegiatan</span>
-                                @if (!$kegiatanId)
-                                    <i class="bi bi-check2" aria-hidden="true"></i>
-                                @endif
-                            </button>
-
-                            @foreach ($kegiatanList as $kg)
-                                <button type="button"
-                                    class="rekap-select-option {{ (string) $kegiatanId === (string) $kg->id ? 'is-selected' : '' }}"
-                                    @click="$refs.native.value = '{{ $kg->id }}'; $refs.native.dispatchEvent(new Event('change', { bubbles: true })); open = false">
-                                    <span>{{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}</span>
-                                    @if ((string) $kegiatanId === (string) $kg->id)
-                                        <i class="bi bi-check2" aria-hidden="true"></i>
-                                    @endif
-                                </button>
-                            @endforeach
-                        </div>
-
-                        <select name="kegiatan_id" id="kegiatan_id" class="rekap-select-native" x-ref="native"
-                            onchange="this.form.submit()" tabindex="-1" aria-hidden="true">
-                            <option value="">Semua Kegiatan</option>
-                            @foreach ($kegiatanList as $kg)
-                                <option value="{{ $kg->id }}"
-                                    {{ (string) $kegiatanId === (string) $kg->id ? 'selected' : '' }}>
-                                    {{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <select name="kegiatan_id" id="kegiatan_id" class="form-select rekap-native-select" onchange="this.form.submit()">
+                        <option value="">Semua Kegiatan</option>
+                        @foreach ($kegiatanList as $kg)
+                            <option value="{{ $kg->id }}"
+                                {{ (string) $kegiatanId === (string) $kg->id ? 'selected' : '' }}>
+                                {{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}
+                            </option>
+                        @endforeach
+                    </select>
 
                 </div>
 
@@ -124,11 +89,10 @@
 
         </div>
 
-
         {{-- ==============================
          REKAP PROGRES FISIK
     =============================== --}}
-        <div class="rekap-card mb-3">
+        <div class="rekap-card rekap-card-summary mb-3">
 
             <div class="rekap-card-header">
 
@@ -206,7 +170,7 @@
         {{-- ==============================
          REKAP PROGRES KEUANGAN
     =============================== --}}
-        <div class="rekap-card">
+        <div class="rekap-card rekap-card-summary">
 
             <div class="rekap-card-header">
 
@@ -447,11 +411,9 @@
             z-index: 1;
             isolation: isolate;
             overflow: visible;
-            background: rgba(255, 255, 255, 0.48);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 18px 35px -18px rgba(15, 23, 42, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.32);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -459,22 +421,43 @@
         }
 
         .rekap-card:hover {
-            transform: translateY(-4px);
+            transform: none;
             box-shadow: 0 18px 35px -18px rgba(79, 70, 229, 0.38);
             border-color: rgba(99, 102, 241, 0.28);
+        }
+
+        .rekap-card-filter {
+            position: relative;
+            z-index: 40;
+            overflow: visible !important;
+            background: rgba(17, 24, 39, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e5edf7;
+            transform: none !important;
+        }
+
+        .rekap-card-summary {
+            background: rgba(255, 255, 255, 0.46);
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            color: var(--admin-text);
+        }
+
+        .rekap-card-filter .row {
+            position: relative;
+            z-index: 50;
         }
 
         .rekap-card-title {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.05rem;
-            color: var(--admin-text);
+            color: inherit;
         }
 
         .rekap-card-title i {
-            color: #4f46e5;
+            color: #8b5cf6;
         }
 
         .rekap-label {
@@ -483,38 +466,41 @@
             gap: 6px;
             font-size: .8rem;
             font-weight: 600;
-            color: var(--admin-muted);
+            color: inherit;
             margin-bottom: 6px;
+            opacity: 0.9;
         }
 
         .rekap-input {
             border-radius: 10px;
-            border-color: var(--admin-border);
-            background-color: var(--admin-surface);
-            color: var(--admin-text);
+            border-color: rgba(148, 163, 184, 0.4);
+            background-color: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
             padding: .55rem .75rem;
         }
 
         .rekap-input:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 .2rem rgba(79, 70, 229, .12);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 .2rem rgba(139, 92, 246, .18);
+            background-color: rgba(15, 23, 42, 0.96);
         }
 
         .rekap-btn-primary {
-            background: #4f46e5;
+            background: linear-gradient(135deg, #7c3aed 0%, #5b4df2 100%);
             color: #fff;
             border-radius: 10px;
             padding: .55rem 1rem;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             border: none;
+            box-shadow: 0 8px 20px -10px rgba(91, 77, 242, 0.8);
         }
 
         .rekap-btn-primary:hover {
-            background: #4338ca;
+            background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
             color: #fff;
         }
 
@@ -582,35 +568,42 @@
         .rekap-stat-table {
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--admin-border);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .rekap-stat-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            padding: 14px 18px;
+            padding: 16px 18px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .rekap-stat-head {
-            background: var(--admin-surface-soft);
+            background: rgba(15, 23, 42, 0.96);
             font-size: .72rem;
             font-weight: 700;
             letter-spacing: .04em;
             text-transform: uppercase;
-            color: var(--admin-muted);
-            border-bottom: 1px solid var(--admin-border);
+            color: #dfeaf8;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
         }
 
         .rekap-stat-head div {
             display: flex;
             align-items: center;
             gap: 6px;
+            justify-content: center;
         }
 
         .rekap-value {
             font-size: 1.15rem;
             font-weight: 700;
             color: var(--admin-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .rekap-value-blue {
