@@ -437,9 +437,15 @@
         }
 
         .rekap-card-summary {
-            background: rgba(255, 255, 255, 0.46);
-            border: 1px solid rgba(255, 255, 255, 0.32);
-            color: var(--admin-text);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            color: #0f172a;
+        }
+
+        html[data-theme="dark"] .rekap-card-summary {
+            background: rgba(17, 24, 39, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e5edf7;
         }
 
         .rekap-card-filter .row {
@@ -557,19 +563,32 @@
         .rekap-card-heading {
             font-weight: 700;
             font-size: 1.1rem;
-            color: var(--admin-text);
+            color: #0f172a;
+        }
+
+        html[data-theme="dark"] .rekap-card-heading {
+            color: #f8fafc;
         }
 
         .rekap-card-subheading {
             font-size: .85rem;
-            color: var(--admin-muted);
+            color: #475569;
+        }
+
+        html[data-theme="dark"] .rekap-card-subheading {
+            color: rgba(148, 163, 184, 0.9);
         }
 
         .rekap-stat-table {
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(255, 255, 255, 0.32);
+        }
+
+        html[data-theme="dark"] .rekap-stat-table {
+            border-color: rgba(148, 163, 184, 0.18);
+            background: rgba(15, 23, 42, 0.52);
         }
 
         .rekap-stat-row {
@@ -578,6 +597,13 @@
             padding: 16px 18px;
             align-items: center;
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        .rekap-stat-row > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
         }
 
         .rekap-stat-head {
@@ -600,10 +626,14 @@
         .rekap-value {
             font-size: 1.15rem;
             font-weight: 700;
-            color: var(--admin-text);
+            color: #0f172a;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        html[data-theme="dark"] .rekap-value {
+            color: #f8fafc;
         }
 
         .rekap-value-blue {
