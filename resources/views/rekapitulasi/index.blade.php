@@ -26,21 +26,61 @@
                 {{-- Kegiatan --}}
                 <div class="col-md-4">
 
+                    @php
+                        $selectedKegiatanOption = $kegiatanList->first(
+                            fn ($kg) => (string) $kg->id === (string) $kegiatanId,
+                        );
+                    @endphp
+
                     <label class="rekap-label" for="kegiatan_id">
                         <i class="bi bi-list-ul" aria-hidden="true"></i>
                         Kegiatan
                     </label>
 
-                    <select name="kegiatan_id" id="kegiatan_id" class="form-select rekap-input" onchange="this.form.submit()">
-                        <option value="">Semua Kegiatan</option>
+                    <div class="rekap-select" x-data="{ open: false }" @click.outside="open = false">
+                        <button type="button" class="rekap-select-trigger" id="kegiatan_id_trigger"
+                            aria-controls="kegiatan_id_menu" :aria-expanded="open.toString()"
+                            @click="open = !open">
+                            <span>
+                                {{ $selectedKegiatanOption ? $selectedKegiatanOption->kode_kegiatan . ' — ' . $selectedKegiatanOption->nama_kegiatan : 'Semua Kegiatan' }}
+                            </span>
+                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        </button>
 
-                        @foreach ($kegiatanList as $kg)
-                            <option value="{{ $kg->id }}"
-                                {{ (string) $kegiatanId === (string) $kg->id ? 'selected' : '' }}>
-                                {{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}
-                            </option>
-                        @endforeach
-                    </select>
+                        <div class="rekap-select-menu" id="kegiatan_id_menu" x-cloak x-show="open"
+                            x-transition.origin.top role="listbox" aria-labelledby="kegiatan_id_trigger">
+                            <button type="button"
+                                class="rekap-select-option {{ $kegiatanId ? '' : 'is-selected' }}"
+                                @click="$refs.native.value = ''; $refs.native.dispatchEvent(new Event('change', { bubbles: true })); open = false">
+                                <span>Semua Kegiatan</span>
+                                @if (!$kegiatanId)
+                                    <i class="bi bi-check2" aria-hidden="true"></i>
+                                @endif
+                            </button>
+
+                            @foreach ($kegiatanList as $kg)
+                                <button type="button"
+                                    class="rekap-select-option {{ (string) $kegiatanId === (string) $kg->id ? 'is-selected' : '' }}"
+                                    @click="$refs.native.value = '{{ $kg->id }}'; $refs.native.dispatchEvent(new Event('change', { bubbles: true })); open = false">
+                                    <span>{{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}</span>
+                                    @if ((string) $kegiatanId === (string) $kg->id)
+                                        <i class="bi bi-check2" aria-hidden="true"></i>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+
+                        <select name="kegiatan_id" id="kegiatan_id" class="rekap-select-native" x-ref="native"
+                            onchange="this.form.submit()" tabindex="-1" aria-hidden="true">
+                            <option value="">Semua Kegiatan</option>
+                            @foreach ($kegiatanList as $kg)
+                                <option value="{{ $kg->id }}"
+                                    {{ (string) $kegiatanId === (string) $kg->id ? 'selected' : '' }}>
+                                    {{ $kg->kode_kegiatan }} — {{ $kg->nama_kegiatan }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                 </div>
 
@@ -403,11 +443,25 @@
         }
 
         .rekap-card {
-            background: var(--admin-surface);
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
+            overflow: visible;
+            background: rgba(255, 255, 255, 0.48);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
-            border: 1px solid var(--admin-border);
+            box-shadow: 0 18px 35px -18px rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.32);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            cursor: default;
+        }
+
+        .rekap-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 35px -18px rgba(79, 70, 229, 0.38);
+            border-color: rgba(99, 102, 241, 0.28);
         }
 
         .rekap-card-title {

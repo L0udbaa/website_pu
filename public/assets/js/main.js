@@ -165,6 +165,42 @@
 
     initUserProfile();
 
+    function initHeaderAutoHide() {
+      var header = document.querySelector(".admin-navbar");
+
+      if (!header) {
+        return;
+      }
+
+      var lastScrollY = window.scrollY;
+      var ticking = false;
+
+      function updateHeaderVisibility() {
+        var currentScrollY = window.scrollY;
+        var scrollDelta = currentScrollY - lastScrollY;
+
+        if (currentScrollY <= 16) {
+          header.classList.remove("header-hidden");
+        } else if (scrollDelta > 8) {
+          header.classList.add("header-hidden");
+        } else if (scrollDelta < -8) {
+          header.classList.remove("header-hidden");
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      }
+
+      window.addEventListener("scroll", function () {
+        if (!ticking) {
+          window.requestAnimationFrame(updateHeaderVisibility);
+          ticking = true;
+        }
+      }, { passive: true });
+    }
+
+    initHeaderAutoHide();
+
     if (!sidebarToggle) {
       return;
     }

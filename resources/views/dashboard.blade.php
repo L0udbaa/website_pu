@@ -11,7 +11,7 @@
             <div>
                 <p class="eyebrow mb-1">Balai Pelaksanaan Jalan Nasional Maluku Utara</p>
                 <h1 class="h3 mb-1">Dashboard Monitoring</h1>
-                <p class="text-muted mb-0">Ringkasan capaian fisik, penyerapan keuangan, dan evaluasi kegiatan infrastruktur.</p>
+                <p class="dashboard-description mb-0">Ringkasan capaian fisik, penyerapan keuangan, dan evaluasi kegiatan infrastruktur.</p>
             </div>
         </div>
         <div class="heading-actions">

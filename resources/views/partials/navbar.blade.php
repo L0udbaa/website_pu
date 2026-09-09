@@ -289,11 +289,11 @@
 
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end profile-menu">
 
                     <li>
                         <a
-                            class="dropdown-item"
+                            class="dropdown-item profile-menu-item"
                             href="{{ route('profile.edit') }}">
                             Profil
                         </a>
@@ -301,7 +301,7 @@
 
                     <li>
                         <a
-                            class="dropdown-item"
+                            class="dropdown-item profile-menu-item"
                             href="{{ route('settings') }}">
                             Pengaturan Akun
                         </a>
@@ -321,7 +321,7 @@
 
                             <button
                                 type="submit"
-                                class="dropdown-item">
+                                class="dropdown-item profile-menu-item profile-menu-danger">
                                 Sign out
                             </button>
 

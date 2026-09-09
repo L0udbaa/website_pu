@@ -10,11 +10,20 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/bootstrap-icons/bootstrap-icons.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-
+    
     @stack('styles')
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body @class([
+    'static-card-page' => request()->routeIs(
+        'dashboard',
+        'kegiatan.*',
+        'progres-fisik.*',
+        'progres-keuangan.*',
+    ),
+])>
     <div class="admin-shell">
         <div class="sidebar-backdrop" data-sidebar-close></div>
 

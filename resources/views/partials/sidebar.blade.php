@@ -28,11 +28,15 @@
             <span class="nav-icon"><i class="bi bi-tools" aria-hidden="true"></i></span>
             <span class="nav-text">Progres Fisik</span>
         </a>
-        <a class="nav-link" href="{{ route('progres-keuangan.index') }}">
+        <a class="nav-link {{ request()->routeIs('progres-keuangan.*') ? 'active' : '' }}"
+            href="{{ route('progres-keuangan.index') }}"
+            @if (request()->routeIs('progres-keuangan.*')) aria-current="page" @endif>
             <span class="nav-icon"><i class="bi bi-cash-coin" aria-hidden="true"></i></span>
             <span class="nav-text">Progres Keuangan</span>
         </a>
-        <a class="nav-link" href="{{ route('rekapitulasi.index') }}">
+        <a class="nav-link {{ request()->routeIs('rekapitulasi.*') ? 'active' : '' }}"
+            href="{{ route('rekapitulasi.index') }}"
+            @if (request()->routeIs('rekapitulasi.*')) aria-current="page" @endif>
             <span class="nav-icon"><i class="bi bi-clipboard-data" aria-hidden="true"></i></span>
             <span class="nav-text">Rekap Progres</span>
         </a>
