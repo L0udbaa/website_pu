@@ -43,7 +43,8 @@ class RekapitulasiController extends Controller
 
         $totalRencanaFisik = (clone $rekapFisikQuery)->sum('rencana_fisik');
         $totalRealisasiFisik = (clone $rekapFisikQuery)->sum('realisasi_fisik');
-        $deviasiFisik = round($totalRealisasiFisik - $totalRencanaFisik, 2);
+        $targetFisik = 100;
+        $sisaFisik = round($targetFisik - $totalRealisasiFisik, 2);
 
         // ==========================================
         // REKAP PROGRES KEUANGAN
@@ -60,9 +61,10 @@ class RekapitulasiController extends Controller
                 $query->whereDate('tanggal_realisasi', '<=', $tanggalAkhir);
             });
 
-        $totalRencanaKeuangan = (clone $rekapKeuanganQuery)->sum('rencana_keuangan');
         $totalRealisasiKeuangan = (clone $rekapKeuanganQuery)->sum('realisasi_keuangan');
-        $deviasiKeuangan = round($totalRealisasiKeuangan - $totalRencanaKeuangan, 2);
+        $kegiatanDenganKeuangan = (clone $rekapKeuanganQuery)->pluck('kegiatan_id')->unique();
+        $nilaiKontrakKeuangan = Kegiatan::whereIn('id', $kegiatanDenganKeuangan)->sum('anggaran');
+        $sisaKeuangan = round($nilaiKontrakKeuangan - $totalRealisasiKeuangan, 2);
 
         $detailFisik = ProgresFisik::query()
             ->with('kegiatan')
@@ -99,12 +101,12 @@ class RekapitulasiController extends Controller
         return view(
             'rekapitulasi.index',
             compact(
-                'totalRencanaFisik',
+                'targetFisik',
                 'totalRealisasiFisik',
-                'deviasiFisik',
-                'totalRencanaKeuangan',
+                'sisaFisik',
+                'nilaiKontrakKeuangan',
                 'totalRealisasiKeuangan',
-                'deviasiKeuangan',
+                'sisaKeuangan',
                 'kegiatanList',
                 'kegiatanId',
                 'selectedKegiatan',

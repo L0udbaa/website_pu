@@ -116,7 +116,7 @@
 
                     <div>
                         <i class="bi bi-bullseye" aria-hidden="true"></i>
-                        Total Rencana
+                        Target Fisik
                     </div>
 
                     <div>
@@ -126,7 +126,7 @@
 
                     <div>
                         <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
-                        Total Deviasi
+                        Sisa Progress
                     </div>
 
                 </div>
@@ -136,7 +136,7 @@
                 <div class="rekap-stat-row">
 
                     <div class="rekap-value">
-                        {{ number_format($totalRencanaFisik, 2, ',', '.') }}%
+                        {{ number_format($targetFisik, 2, ',', '.') }}%
                     </div>
 
                     <div class="rekap-value rekap-value-blue">
@@ -145,12 +145,12 @@
 
                     <div>
 
-                        <span class="rekap-pill {{ $deviasiFisik < 0 ? 'rekap-pill-danger' : 'rekap-pill-success' }}">
+                        <span class="rekap-pill {{ $sisaFisik < 0 ? 'rekap-pill-danger' : 'rekap-pill-success' }}">
 
-                            <i class="bi {{ $deviasiFisik < 0 ? 'bi-graph-down-arrow' : 'bi-graph-up-arrow' }}"
+                            <i class="bi {{ $sisaFisik < 0 ? 'bi-graph-down-arrow' : 'bi-graph-up-arrow' }}"
                                 aria-hidden="true"></i>
 
-                            {{ $deviasiFisik >= 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%
+                            {{ $sisaFisik >= 0 ? '+' : '' }}{{ number_format($sisaFisik, 2, ',', '.') }}%
 
                         </span>
 
@@ -194,7 +194,7 @@
 
                     <div>
                         <i class="bi bi-wallet2" aria-hidden="true"></i>
-                        Total Rencana
+                        Nilai Kontrak
                     </div>
 
                     <div>
@@ -204,7 +204,7 @@
 
                     <div>
                         <i class="bi bi-bar-chart" aria-hidden="true"></i>
-                        Total Deviasi
+                        Sisa Keuangan
                     </div>
 
                 </div>
@@ -214,7 +214,7 @@
                 <div class="rekap-stat-row">
 
                     <div class="rekap-value">
-                        Rp {{ number_format($totalRencanaKeuangan, 0, ',', '.') }}
+                        Rp {{ number_format($nilaiKontrakKeuangan, 0, ',', '.') }}
                     </div>
 
                     <div class="rekap-value rekap-value-green">
@@ -223,13 +223,13 @@
 
                     <div>
 
-                        <span class="rekap-pill {{ $deviasiKeuangan < 0 ? 'rekap-pill-danger' : 'rekap-pill-success' }}">
+                        <span class="rekap-pill {{ $sisaKeuangan < 0 ? 'rekap-pill-danger' : 'rekap-pill-success' }}">
 
-                            <i class="bi {{ $deviasiKeuangan < 0 ? 'bi-dash-circle' : 'bi-plus-circle' }}"
+                            <i class="bi {{ $sisaKeuangan < 0 ? 'bi-dash-circle' : 'bi-plus-circle' }}"
                                 aria-hidden="true"></i>
 
-                            {{ $deviasiKeuangan >= 0 ? '+' : '-' }}
-                            Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}
+                            {{ $sisaKeuangan >= 0 ? '+' : '-' }}
+                            Rp {{ number_format(abs($sisaKeuangan), 0, ',', '.') }}
 
                         </span>
 
@@ -293,7 +293,7 @@
                                 <tr class="table-total-row">
                                     <td class="fw-bold text-dark">Total</td>
                                     <td class="fw-bold text-dark">{{ number_format($rencanaPersenTotalFisik, 2, ',', '.') }}%</td>
-                                    <td class="fw-bold text-dark">{{ $tanggalRencanaFisikTotal ? \Carbon\Carbon::parse($tanggalRencanaFisikTotal)->format('d-m-Y') : '-' }}</td>
+                                    <td class="fw-bold text-dark">-</td>
                                     <td class="fw-bold text-dark">{{ number_format($realisasiPersenTotalFisik, 2, ',', '.') }}%</td>
                                     <td>
                                         <span class="badge {{ $totalDeviasiFisikDetail < 0 ? 'text-bg-danger' : 'text-bg-success' }}">
