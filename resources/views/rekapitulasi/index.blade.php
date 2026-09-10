@@ -9,12 +9,12 @@
         {{-- ==============================
          JUDUL
     =============================== --}}
-        <h1 class="h3 mb-3">Rekap Progres</h1>
-
         {{-- ==============================
          FILTER
     =============================== --}}
         <div class="rekap-card rekap-card-filter mb-3">
+
+            <h1 class="h3 mb-3 fw-bold rekap-page-title">Rekap Progres</h1>
 
             <div class="rekap-card-title">
                 <i class="bi bi-funnel-fill" aria-hidden="true"></i>
@@ -406,6 +406,18 @@
             width: 100%;
         }
 
+        .rekap-page-title {
+            color: #3730a3;
+        }
+
+        .rekap-card-filter .rekap-page-title {
+            color: #ffffff;
+        }
+
+        html[data-theme="dark"] .rekap-page-title {
+            color: #e5edf7;
+        }
+
         .rekap-card {
             position: relative;
             z-index: 1;
@@ -434,6 +446,13 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: #e5edf7;
             transform: none !important;
+        }
+
+        html[data-theme="light"] .rekap-card-filter {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 52%, #3730a3 100%);
+            border-color: rgba(255, 255, 255, 0.24);
+            color: #ffffff;
+            box-shadow: 0 18px 35px -18px rgba(55, 48, 163, 0.55);
         }
 
         .rekap-card-summary {
@@ -491,6 +510,20 @@
             background-color: rgba(15, 23, 42, 0.96);
         }
 
+        html[data-theme="light"] .rekap-native-select,
+        html[data-theme="light"] .rekap-input {
+            background-color: rgba(15, 23, 42, 0.42);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        html[data-theme="light"] .rekap-native-select:focus,
+        html[data-theme="light"] .rekap-input:focus {
+            border-color: rgba(255, 255, 255, 0.72);
+            box-shadow: 0 0 0 .2rem rgba(255, 255, 255, .16);
+            background-color: rgba(15, 23, 42, 0.56);
+        }
+
         .rekap-btn-primary {
             background: linear-gradient(135deg, #7c3aed 0%, #5b4df2 100%);
             color: #fff;
@@ -508,6 +541,15 @@
         .rekap-btn-primary:hover {
             background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
             color: #fff;
+        }
+
+        html[data-theme="light"] .rekap-btn-primary {
+            background: rgba(79, 70, 229, 0.9);
+            box-shadow: 0 8px 20px -10px rgba(30, 27, 75, 0.8);
+        }
+
+        html[data-theme="light"] .rekap-btn-primary:hover {
+            background: rgba(55, 48, 163, 0.96);
         }
 
         .table-total-row {
