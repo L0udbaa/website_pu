@@ -11,19 +11,16 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
-        $latestProgresFisik = ProgresFisik::latestPerKegiatan();
-        $totalRencanaFisik = (clone $latestProgresFisik)->sum('rencana_fisik');
-        $totalRealisasiFisik = (clone $latestProgresFisik)->sum('realisasi_fisik');
-        $latestProgresKeuangan = ProgresKeuangan::latestPerKegiatan();
-        $totalRencanaKeuangan = (clone $latestProgresKeuangan)->sum('rencana_keuangan');
-        $totalRealisasiKeuangan = (clone $latestProgresKeuangan)->sum('realisasi_keuangan');
+        $progresFisik = ProgresFisik::query();
+        $totalRencanaFisik = (clone $progresFisik)->sum('rencana_fisik');
+        $totalRealisasiFisik = (clone $progresFisik)->sum('realisasi_fisik');
+        $progresKeuangan = ProgresKeuangan::query();
+        $totalRencanaKeuangan = (clone $progresKeuangan)->sum('rencana_keuangan');
+        $totalRealisasiKeuangan = (clone $progresKeuangan)->sum('realisasi_keuangan');
+        $totalRealisasiPersenKeuangan = (clone $progresKeuangan)->sum('realisasi_persen');
 
-        $persentaseFisik = $totalRencanaFisik > 0
-            ? min(100, round(($totalRealisasiFisik / $totalRencanaFisik) * 100, 1))
-            : 0;
-        $persentaseKeuangan = $totalRencanaKeuangan > 0
-            ? min(100, round(($totalRealisasiKeuangan / $totalRencanaKeuangan) * 100, 1))
-            : 0;
+        $persentaseFisik = min(100, round($totalRealisasiFisik, 1));
+        $persentaseKeuangan = min(100, round($totalRealisasiPersenKeuangan, 1));
 
         $kegiatan = Kegiatan::with(['progresFisik', 'progresKeuangan'])
             ->latest('id')

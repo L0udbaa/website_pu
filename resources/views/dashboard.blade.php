@@ -26,12 +26,10 @@
 
     @php
         $activityItems = $kegiatan->take(6)->map(function ($item) {
-            $latestFisik = $item->progresFisik->sortByDesc('id')->first();
-            $latestKeuangan = $item->progresKeuangan->sortByDesc('id')->first();
-
-            $fisik = $latestFisik ? (float) $latestFisik->realisasi_fisik : 0;
-            $keuangan = $latestKeuangan ? (float) $latestKeuangan->realisasi_keuangan : 0;
-            $deviasi = $latestKeuangan ? (float) $latestKeuangan->deviasi_keuangan : 0;
+            $fisik = (float) $item->progresFisik->sum('realisasi_fisik');
+            $keuangan = (float) $item->progresKeuangan->sum('realisasi_persen');
+            $rencanaKeuangan = (float) $item->progresKeuangan->sum('rencana_persen');
+            $deviasi = $keuangan - $rencanaKeuangan;
 
             return [
                 'nama' => $item->nama_kegiatan,
@@ -132,7 +130,7 @@
                     <div class="d-flex justify-content-between align-items-end mb-2 flex-wrap gap-2">
                         <div>
                             <h3 class="h4 mb-1 fw-semibold" style="color: var(--text);">Grafik Per Kegiatan</h3>
-                            <small style="color: var(--muted);">Perbandingan rencana dan realisasi</small>
+                            <small style="color: var(--muted);">Persentase progres fisik dan keuangan terbaru</small>
                         </div>
                         <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size: 11px;">
                             <span class="d-inline-flex align-items-center gap-2 fw-semibold" style="color: var(--muted);">
@@ -146,24 +144,36 @@
                         </div>
                     </div>
 
-                    <div class="d-flex align-items-end justify-content-start gap-2" style="height: 150px; overflow: hidden; padding-left: 2px; padding-right: 2px;">
-                        @foreach ($activityItems as $activity)
-                            @php
-                                $barHeight = max(18, min(100, $activity['fisik'] * 0.85));
-                                $keuanganHeight = max(18, min(100, $activity['keuangan'] * 0.85));
-                            @endphp
-                            <div class="d-flex flex-column align-items-center justify-content-end" style="width: 54px; min-width: 54px; flex: 0 0 54px;">
-                                <div class="d-flex align-items-end justify-content-center gap-1" style="height: 96px; width: 100%;">
-                                    <div style="width: 9px; height: {{ $barHeight }}%; background: linear-gradient(180deg, #4f46e5, #4338ca); opacity: 0.95; box-shadow: 0 6px 12px -8px rgba(79, 70, 229, 0.9); border-radius: 999px 999px 0 0; min-height: 22px;"></div>
-                                    <div style="width: 9px; height: {{ $keuanganHeight }}%; background: linear-gradient(180deg, #22c55e, #16a34a); opacity: 0.95; box-shadow: 0 6px 12px -8px rgba(34, 197, 94, 0.9); border-radius: 999px 999px 0 0; min-height: 22px;"></div>
+                    <div class="dashboard-activity-chart" role="img" aria-label="Perbandingan persentase progres fisik dan realisasi keuangan per kegiatan">
+                        <div class="dashboard-activity-y-axis" aria-hidden="true">
+                            <span>100</span>
+                            <span>75</span>
+                            <span>50</span>
+                            <span>25</span>
+                            <span>0</span>
+                        </div>
+                        <div class="dashboard-activity-plot">
+                            @foreach ($activityItems as $activity)
+                                @php
+                                    $fisik = min(100, max(0, $activity['fisik']));
+                                    $keuangan = min(100, max(0, $activity['keuangan']));
+                                @endphp
+                                <div class="dashboard-activity-column">
+                                    <div class="dashboard-activity-column-plot">
+                                        <div class="dashboard-activity-bar dashboard-activity-bar-fisik" style="height: {{ $fisik }}%;">
+                                            <span>{{ number_format($fisik, 0, ',', '.') }}%</span>
+                                        </div>
+                                        <div class="dashboard-activity-bar dashboard-activity-bar-keuangan" style="height: {{ $keuangan }}%;">
+                                            <span>{{ number_format($keuangan, 0, ',', '.') }}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="dashboard-activity-column-label" title="{{ $activity['nama'] }}">
+                                        <strong><i class="bi bi-cone-striped me-1" aria-hidden="true"></i>{{ $activity['kode'] }}</strong>
+                                        <small>{{ $activity['nama'] }}</small>
+                                    </div>
                                 </div>
-                                <div class="text-center mt-2" style="font-size: 10px; color: var(--muted); line-height: 1.2;">
-                                    <div class="fw-semibold mb-1" style="max-width: 100%; word-break: break-word; color: var(--text);">{{ $activity['kode'] }}</div>
-                                    <div style="max-width: 100%; word-break: break-word;">{{ $activity['nama'] }}</div>
-                                    <div>{{ number_format($activity['fisik'], 0, ',', '.') }}%</div>
-                                </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
