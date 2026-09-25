@@ -3,304 +3,191 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="dashboard-page">
-    {{-- Page Heading (Template Standard) --}}
-    <div class="page-heading dashboard-hero">
-        <div class="page-heading-copy">
-            <span class="page-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
-            <div>
-                <p class="eyebrow mb-1">Balai Pelaksanaan Jalan Nasional Maluku Utara</p>
-                <h1 class="h3 mb-1">Dashboard Monitoring</h1>
-                <p class="dashboard-description mb-0">Ringkasan capaian fisik, penyerapan keuangan, dan evaluasi kegiatan infrastruktur.</p>
-            </div>
-        </div>
-        <div class="heading-actions">
-            <a class="btn btn-outline-secondary btn-sm" href="{{ route('rekapitulasi.index') }}">
-                <i class="bi bi-clipboard-data me-1" aria-hidden="true"></i> Rekapitulasi
-            </a>
-            <a class="btn btn-primary btn-sm" href="{{ route('kegiatan.create') }}">
-                <i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Tambah Kegiatan
-            </a>
-        </div>
-    </div>
-
+    {{-- Catatan: Pindahkan logika mapping $summaryRows di bawah ini ke Controller untuk praktik terbaik --}}
     @php
-        $activityItems = $kegiatan->take(6)->map(function ($item) {
-            $fisik = (float) $item->progresFisik->sum('realisasi_fisik');
-            $keuangan = (float) $item->progresKeuangan->sum('realisasi_persen');
-            $rencanaKeuangan = (float) $item->progresKeuangan->sum('rencana_persen');
-            $deviasi = $keuangan - $rencanaKeuangan;
+        $summaryRows = $kegiatan->take(5)->map(function ($item) {
+            $latestFisik = $item->progresFisik->sortByDesc('id')->first();
+            $latestKeuangan = $item->progresKeuangan->sortByDesc('id')->first();
+
+            $rencana = $latestFisik ? (float) $latestFisik->rencana_fisik : 0;
+            $kemajuan = $latestFisik ? (float) $latestFisik->realisasi_fisik : 0;
+            $deviasi = $kemajuan - $rencana;
+            $nilai = $latestKeuangan ? (float) $latestKeuangan->realisasi_keuangan : 0;
 
             return [
                 'nama' => $item->nama_kegiatan,
-                'kode' => $item->kode_kegiatan,
-                'fisik' => $fisik,
-                'keuangan' => $keuangan,
+                'kode' => $item->kode_kegiatan ?: 'PKG',
+                'rencana' => $rencana,
+                'kemajuan' => $kemajuan,
                 'deviasi' => $deviasi,
+                'nilai' => $nilai,
+                'detail_url' => route('kegiatan.edit', $item),
             ];
         });
     @endphp
 
-    <section class="mt-3">
-        <div class="rounded-4 border bg-white p-3 p-lg-4 shadow-sm" style="background: #f8f9fc; border-color: #dfe7f1;">
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-                <div class="d-flex align-items-center gap-3">
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white border" style="width: 38px; height: 38px; color: #4c6ef5; border-color: rgba(76,110,245,.2);">
-                        <i class="bi bi-graph-up-arrow"></i>
-                    </span>
-                    <h2 class="h3 mb-0 fw-semibold text-dark">Capaian Progres Kumulatif</h2>
-                </div>
-                <a href="{{ route('rekapitulasi.index') }}" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold" style="border-color: #dfe7f1; color: #1f2937; background: rgba(255,255,255,.85);">
-                    Buka Rekapitulasi <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-12 col-xl-6">
-                    <div class="rounded-4 border bg-white p-3 h-100" style="border-color: #dfe7f1; min-height: 150px;">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-uppercase" style="letter-spacing: .08em; color: #4f46e5;">Progres Fisik</span>
-                            <span class="badge rounded-pill px-3 py-2 fw-bold" style="background: linear-gradient(135deg, #4f46e5, #5b7cff); color: white;">{{ number_format($persentaseFisik, 1, ',', '.') }}%</span>
-                        </div>
-                        <div class="progress" style="height: 12px; background: #edf2f9; border-radius: 999px;" role="progressbar" aria-valuenow="{{ $persentaseFisik }}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{ $persentaseFisik }}%; background: linear-gradient(90deg, #4f46e5, #6276ff); border-radius: 999px;"></div>
-                        </div>
-                        <div class="d-flex justify-content-between small text-secondary mt-3">
-                            <span>Rencana: <strong>{{ number_format($totalRencanaFisik, 2, ',', '.') }}%</strong></span>
-                            <span>Realisasi: <strong>{{ number_format($totalRealisasiFisik, 2, ',', '.') }}%</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-xl-6">
-                    <div class="rounded-4 border bg-white p-3 h-100" style="border-color: #dfe7f1; min-height: 150px;">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-uppercase" style="letter-spacing: .08em; color: #16a34a;">Realisasi Keuangan</span>
-                            <span class="badge rounded-pill px-3 py-2 fw-bold" style="background: linear-gradient(135deg, #16a34a, #30c779); color: white;">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</span>
-                        </div>
-                        <div class="progress" style="height: 12px; background: #edf2f9; border-radius: 999px;" role="progressbar" aria-valuenow="{{ $persentaseKeuangan }}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: {{ $persentaseKeuangan }}%; background: linear-gradient(90deg, #16a34a, #30c779); border-radius: 999px;"></div>
-                        </div>
-                        <div class="d-flex justify-content-between small text-secondary mt-3">
-                            <span>Rencana: <strong>Rp {{ number_format($totalRencanaKeuangan, 0, ',', '.') }}</strong></span>
-                            <span>Realisasi: <strong>Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</strong></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-3">
-                <div class="col-12 col-md-4">
-                    <div class="rounded-4 border bg-white p-3 text-center h-100" style="border-color: #dfe7f1;">
-                        <small class="text-uppercase fw-bold d-block mb-2 text-secondary" style="letter-spacing: .08em;">Status Deviasi Fisik</small>
-                        <h3 class="mb-1 fw-bold" style="color: #10b981; font-size: clamp(2rem, 2vw, 2.4rem);">
-                            {{ $deviasiFisik > 0 ? '+' : '' }}{{ number_format($deviasiFisik, 2, ',', '.') }}%
-                        </h3>
-                        <small class="text-secondary">{{ $deviasiFisik > 0 ? 'Di atas rencana' : ($deviasiFisik < 0 ? 'Perlu percepatan' : 'Sesuai jadwal') }}</small>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <div class="rounded-4 border bg-white p-3 text-center h-100" style="border-color: #dfe7f1;">
-                        <small class="text-uppercase fw-bold d-block mb-2 text-secondary" style="letter-spacing: .08em;">Status Deviasi Keuangan</small>
-                        <h3 class="mb-1 fw-bold" style="color: #10b981; font-size: clamp(2rem, 2vw, 2.4rem);">
-                            {{ $deviasiKeuangan >= 0 ? '+' : '-' }}Rp {{ number_format(abs($deviasiKeuangan), 0, ',', '.') }}
-                        </h3>
-                        <small class="text-secondary">{{ $deviasiKeuangan >= 0 ? 'Optimal' : 'Sisa Alokasi' }}</small>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <div class="rounded-4 border bg-white p-3 text-center h-100" style="border-color: #dfe7f1;">
-                        <small class="text-uppercase fw-bold d-block mb-2 text-secondary" style="letter-spacing: .08em;">Total Pagu Kegiatan</small>
-                        <h3 class="mb-1 fw-bold" style="color: #0f172a; font-size: clamp(2rem, 2vw, 2.4rem);">
-                            Rp {{ number_format($kegiatan->sum('anggaran'), 0, ',', '.') }}
-                        </h3>
-                        <small class="text-secondary">{{ $kegiatan->count() }} dari {{ $jumlahKegiatan }} kegiatan terbaru</small>
-                    </div>
-                </div>
-            </div>
+    <div class="dashboard-ux-page container mx-auto max-w-7xl px-4 py-6">
+        
+       <!-- BANNER HEADER SESUAI HALAMAN PROGRES FISIK -->
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white mb-6 shadow-lg flex items-center justify-between">
+    <div class="flex items-center gap-4">
+        <!-- Ikon Banner -->
+        <div class="p-3 bg-white/20 backdrop-blur-md rounded-xl">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+            </svg>
         </div>
-    </section>
+        <div>
+            <span class="text-xs font-bold tracking-wider uppercase opacity-80">MONITORING</span>
+            <h1 class="text-2xl font-bold">Dashboard</h1>
+            <p class="text-xs opacity-90 mt-0.5">Ringkasan indikator dan progres kegiatan.</p>
+        </div>
+    </div>
 
-    <section class="mt-3">
-        <div class="row g-3 align-items-stretch">
-            <div class="col-12 col-xl-6">
-                <div class="rounded-4 border p-3 shadow-sm h-100" style="border-color: var(--border); background: linear-gradient(180deg, var(--surface-solid), var(--surface-soft)); min-height: 220px; overflow: hidden; max-width: 100%;">
-                    <div class="d-flex justify-content-between align-items-end mb-2 flex-wrap gap-2">
-                        <div>
-                            <h3 class="h4 mb-1 fw-semibold" style="color: var(--text);">Grafik Per Kegiatan</h3>
-                            <small style="color: var(--muted);">Persentase progres fisik dan keuangan terbaru</small>
-                        </div>
-                        <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size: 11px;">
-                            <span class="d-inline-flex align-items-center gap-2 fw-semibold" style="color: var(--muted);">
-                                <span class="d-inline-block rounded" style="width: 10px; height: 10px; background: linear-gradient(180deg, #4f46e5, #4338ca);"></span>
-                                Biru = Progres Fisik
-                            </span>
-                            <span class="d-inline-flex align-items-center gap-2 fw-semibold" style="color: var(--muted);">
-                                <span class="d-inline-block rounded" style="width: 10px; height: 10px; background: linear-gradient(180deg, #22c55e, #16a34a);"></span>
-                                Hijau = Realisasi Keuangan
-                            </span>
-                        </div>
-                    </div>
+    <!-- Tombol Edit Dashboard -->
+    <a href=" route('#') " class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white border border-white/30 rounded-xl text-xs font-semibold backdrop-blur-md transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        <span>Edit Dashboard</span>
+    </a>
+</div>
 
-                    <div class="dashboard-activity-chart" role="img" aria-label="Perbandingan persentase progres fisik dan realisasi keuangan per kegiatan">
-                        <div class="dashboard-activity-y-axis" aria-hidden="true">
-                            <span>100</span>
-                            <span>75</span>
-                            <span>50</span>
-                            <span>25</span>
-                            <span>0</span>
-                        </div>
-                        <div class="dashboard-activity-plot">
-                            @foreach ($activityItems as $activity)
-                                @php
-                                    $fisik = min(100, max(0, $activity['fisik']));
-                                    $keuangan = min(100, max(0, $activity['keuangan']));
-                                @endphp
-                                <div class="dashboard-activity-column">
-                                    <div class="dashboard-activity-column-plot">
-                                        <div class="dashboard-activity-bar dashboard-activity-bar-fisik" style="height: {{ $fisik }}%;">
-                                            <span>{{ number_format($fisik, 0, ',', '.') }}%</span>
-                                        </div>
-                                        <div class="dashboard-activity-bar dashboard-activity-bar-keuangan" style="height: {{ $keuangan }}%;">
-                                            <span>{{ number_format($keuangan, 0, ',', '.') }}%</span>
-                                        </div>
-                                    </div>
-                                    <div class="dashboard-activity-column-label" title="{{ $activity['nama'] }}">
-                                        <strong><i class="bi bi-cone-striped me-1" aria-hidden="true"></i>{{ $activity['kode'] }}</strong>
-                                        <small>{{ $activity['nama'] }}</small>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="dashboard-ux-layout dashboard-ux-layout-simple w-full">
+            <main class="dashboard-ux-main w-full">
+                <!-- KPI Section -->
+                <section class="dashboard-ux-kpis grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" aria-label="Ringkasan indikator">
+                    <article class="dashboard-ux-kpi-card card p-4 flex flex-col justify-between">
+                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Jumlah Paket</span>
+                        <strong class="text-3xl font-extrabold my-1">{{ number_format($jumlahKegiatan, 0, ',', '.') }}</strong>
+                        <small class="text-xs opacity-60">paket</small>
+                    </article>
 
-            <div class="col-12 col-xl-6">
-                <div class="rounded-4 border p-2 shadow-sm h-100" style="border-color: var(--border); background: linear-gradient(180deg, var(--surface-solid), var(--surface-soft)); min-height: 220px; overflow: hidden; max-width: 100%;">
-                    <div class="mb-2">
-                        <h3 class="h5 mb-1 fw-semibold" style="color: var(--text);">Ringkasan Per Kegiatan</h3>
-                        <small style="color: var(--muted);">Rencana, realisasi, dan deviasi</small>
-                    </div>
+                    <article class="dashboard-ux-kpi-card primary card p-4 flex flex-col justify-between">
+                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Progress Fisik</span>
+                        <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong>
+                        <small class="text-xs opacity-60">Target Fisik</small>
+                    </article>
 
-                    <div class="table-responsive">
-                        <table class="table table-borderless align-middle mb-0" style="font-size: 11px;">
-                            <thead>
-                                <tr class="text-secondary">
-                                    <th class="px-0 pb-2" style="white-space: nowrap;">KEGIATAN</th>
-                                    <th class="px-1 pb-2 text-center" style="white-space: nowrap;">RENCANA</th>
-                                    <th class="px-1 pb-2 text-center" style="white-space: nowrap;">REALISASI</th>
-                                    <th class="px-1 pb-2 text-center" style="white-space: nowrap;">DEVIASI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($activityItems as $activity)
-                                    <tr>
-                                        <td class="px-0 py-1 fw-semibold text-dark" style="white-space: normal; word-break: break-word;">
-                                            <div class="fw-bold text-primary small">{{ $activity['kode'] }}</div>
-                                            <div>{{ $activity['nama'] }}</div>
-                                        </td>
-                                        <td class="px-1 py-1 text-center">{{ number_format(min(100, max(0, $activity['fisik'])), 0, ',', '.') }}%</td>
-                                        <td class="px-1 py-1 text-center">{{ number_format(min(100, max(0, $activity['keuangan'])), 0, ',', '.') }}%</td>
-                                        <td class="px-1 py-1 text-center {{ $activity['deviasi'] >= 0 ? 'text-success' : 'text-danger' }}">
-                                            {{ $activity['deviasi'] >= 0 ? '+' : '' }}{{ number_format($activity['deviasi'], 0, ',', '.') }}%
-                                        </td>
+                    <article class="dashboard-ux-kpi-card success card p-4 flex flex-col justify-between">
+                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Keuangan</span>
+                        <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong>
+                        <small class="text-xs opacity-60">Realisasi Keuangan</small>
+                    </article>
+
+                    <a href="{{ route('rekapitulasi.index') }}" class="dashboard-ux-kpi-card link-card card p-4 flex flex-col justify-between hover:scale-[1.02] transition-transform" target="_blank" rel="noopener noreferrer">
+                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Nilai Uang Muka / Progres</span>
+                        <strong class="text-xl font-bold my-1 text-emerald-400">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</strong>
+                        <small class="text-xs opacity-60">Detail per paket</small>
+                    </a>
+
+                    <article class="dashboard-ux-kpi-card muted card p-4 flex flex-col justify-between">
+                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Ringkasan Tambahan</span>
+                        <strong class="text-3xl font-extrabold my-1">{{ number_format($kegiatan->count(), 0, ',', '.') }}</strong>
+                        <small class="text-xs opacity-60">kegiatan aktif</small>
+                    </article>
+                </section>
+
+                <!-- Bottom Section: Chart & Table -->
+                <section class="dashboard-ux-bottom-grid grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- Chart Panel -->
+                    <article class="dashboard-ux-chart-panel card p-5 lg:col-span-5">
+                        <div class="dashboard-ux-panel-head flex justify-between items-center mb-4">
+                            <div>
+                                <p class="eyebrow text-xs uppercase text-indigo-400 font-semibold">Target vs Realisasi</p>
+                                <h3 class="text-lg font-bold">Kurva</h3>
+                            </div>
+                            <div class="dashboard-ux-chart-legend flex gap-3 text-xs">
+                                <span class="flex items-center gap-1"><i class="legend-dot target w-2 h-2 rounded-full bg-indigo-500 inline-block"></i>Target</span>
+                                <span class="flex items-center gap-1"><i class="legend-dot actual w-2 h-2 rounded-full bg-emerald-400 inline-block"></i>Aktual</span>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-ux-chart-wrap w-full overflow-hidden" role="img" aria-label="Grafik kurva-S target dan realisasi paket 1 sampai 7">
+                            <svg viewBox="0 0 600 260" preserveAspectRatio="none" class="w-full h-auto" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="actualLineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                                        <stop offset="0%" stop-color="#60a5fa"/>
+                                        <stop offset="100%" stop-color="#34d399"/>
+                                    </linearGradient>
+                                </defs>
+                                <g class="dashboard-ux-grid-lines stroke-slate-700/40" stroke-width="1">
+                                    <line x1="32" y1="20" x2="570" y2="20"/>
+                                    <line x1="32" y1="78" x2="570" y2="78"/>
+                                    <line x1="32" y1="136" x2="570" y2="136"/>
+                                    <line x1="32" y1="194" x2="570" y2="194"/>
+                                    <line x1="32" y1="240" x2="570" y2="240"/>
+                                </g>
+                                <path d="M32 210 C110 180, 150 168, 200 140 S290 80, 340 90 S420 100, 470 74 S540 40, 570 28" fill="none" stroke="#818cf8" stroke-width="3" class="dashboard-ux-target-line"/>
+                                <path d="M32 215 C110 200, 150 192, 200 170 S290 120, 340 120 S420 98, 470 62 S540 44, 570 32" fill="none" stroke="url(#actualLineGradient)" stroke-width="3" class="dashboard-ux-actual-line"/>
+                                <g class="dashboard-ux-points fill-emerald-400">
+                                    <circle cx="32" cy="215" r="4"/>
+                                    <circle cx="122" cy="198" r="4"/>
+                                    <circle cx="198" cy="170" r="4"/>
+                                    <circle cx="310" cy="118" r="4"/>
+                                    <circle cx="395" cy="100" r="4"/>
+                                    <circle cx="470" cy="62" r="4"/>
+                                    <circle cx="570" cy="32" r="4"/>
+                                </g>
+                                <g class="dashboard-ux-axis-labels fill-slate-400 text-xs">
+                                    <text x="32" y="258">1</text>
+                                    <text x="122" y="258">2</text>
+                                    <text x="198" y="258">3</text>
+                                    <text x="310" y="258">4</text>
+                                    <text x="395" y="258">5</text>
+                                    <text x="470" y="258">6</text>
+                                    <text x="570" y="258">7</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Table Panel -->
+                    <article class="dashboard-ux-table-panel card p-5 lg:col-span-7">
+                        <div class="dashboard-ux-panel-head table-head mb-4">
+                            <div>
+                                <p class="eyebrow text-xs uppercase text-indigo-400 font-semibold">Progress paket</p>
+                                <h3 class="text-lg font-bold">Rekapan Progress</h3>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-ux-table-wrap overflow-x-auto">
+                            <table class="table w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-700/50 text-xs uppercase tracking-wider text-slate-400">
+                                        <th class="py-3 px-2">Kegiatan</th>
+                                        <th class="py-3 px-2">Rencana</th>
+                                        <th class="py-3 px-2">Kemajuan</th>
+                                        <th class="py-3 px-2">Deviasi</th>
+                                        <th class="py-3 px-2">Uang / Nilai</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700/30 text-sm">
+                                    @forelse ($summaryRows as $row)
+                                        <tr class="hover:bg-slate-800/40 transition-colors">
+                                            <td class="py-3 px-2">
+                                                <a href="{{ $row['detail_url'] }}" target="_blank" rel="noopener noreferrer" class="row-link font-medium hover:underline">
+                                                    {{ $row['nama'] }}
+                                                </a>
+                                            </td>
+                                            <td class="py-3 px-2">{{ number_format($row['rencana'], 1, ',', '.') }}%</td>
+                                            <td class="py-3 px-2">{{ number_format($row['kemajuan'], 1, ',', '.') }}%</td>
+                                            <td class="py-3 px-2 font-semibold {{ $row['deviasi'] >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">
+                                                {{ $row['deviasi'] >= 0 ? '+' : '' }}{{ number_format($row['deviasi'], 1, ',', '.') }}%
+                                            </td>
+                                            <td class="py-3 px-2">Rp {{ number_format($row['nilai'], 0, ',', '.') }}</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="text-center py-6 text-slate-400">Belum ada data kegiatan.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+            </main>
         </div>
-    </section>
-
-    {{-- Bottom Table: Kegiatan Infrastruktur Terbaru --}}
-    <section class="panel mt-3 dashboard-panel dashboard-table-panel">
-        <div class="panel-header d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="h5 mb-1 section-title">
-                    <i class="bi bi-list-check me-2 text-primary" aria-hidden="true"></i>
-                    <span>Kegiatan Infrastruktur Terbaru</span>
-                </h2>
-                <p class="text-muted mb-0">Daftar kegiatan pekerjaan jalan dan jembatan yang terakhir ditambahkan.</p>
-            </div>
-            <a class="btn btn-outline-secondary btn-sm" href="{{ route('kegiatan.index') }}">
-                Lihat Semua Kegiatan <i class="bi bi-arrow-right ms-1"></i>
-            </a>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">Kode & Nama Kegiatan</th>
-                        <th scope="col">Lokasi</th>
-                        <th scope="col">Tahun</th>
-                        <th scope="col" class="text-end">Pagu Anggaran</th>
-                        <th scope="col" class="text-center">Progres Fisik</th>
-                        <th scope="col" class="text-center">Realisasi Keuangan</th>
-                        <th scope="col" class="text-end">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($kegiatan as $item)
-                        @php
-                            $latestFisik = $item->progresFisik->sortByDesc('id')->first();
-                            $latestKeuangan = $item->progresKeuangan->sortByDesc('id')->first();
-                        @endphp
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge text-bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">{{ $item->kode_kegiatan }}</span>
-                                    <span class="fw-semibold text-truncate" style="max-width: 260px;" title="{{ $item->nama_kegiatan }}">{{ $item->nama_kegiatan }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="text-muted small">
-                                    <i class="bi bi-geo-alt text-danger me-1"></i>{{ $item->lokasi ?: '-' }}
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge text-bg-light border">{{ $item->tahun }}</span>
-                            </td>
-                            <td class="text-end fw-bold">
-                                Rp {{ number_format($item->anggaran, 0, ',', '.') }}
-                            </td>
-                            <td class="text-center">
-                                @if ($latestFisik)
-                                    <span class="badge dashboard-status-badge dashboard-status-primary text-bg-primary bg-opacity-15 text-primary border border-primary border-opacity-25">
-                                        {{ number_format($latestFisik->realisasi_fisik, 1, ',', '.') }}%
-                                    </span>
-                                @else
-                                    <span class="text-muted small">-</span>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if ($latestKeuangan)
-                                    <span class="badge dashboard-status-badge dashboard-status-success text-bg-success bg-opacity-15 text-success border border-success border-opacity-25">
-                                        Rp {{ number_format($latestKeuangan->realisasi_keuangan, 0, ',', '.') }}
-                                    </span>
-                                @else
-                                    <span class="text-muted small">-</span>
-                                @endif
-                            </td>
-                            <td class="text-end">
-                                <a class="btn btn-light btn-sm" href="{{ route('kegiatan.edit', $item) }}" title="Lihat & Edit">
-                                    <i class="bi bi-pencil-square me-1"></i> Detail
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-muted py-4">Belum ada kegiatan yang terdaftar.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </section>
     </div>
 @endsection
