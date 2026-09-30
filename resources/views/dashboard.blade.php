@@ -25,163 +25,164 @@
             ];
         });
     @endphp
-       <!-- BANNER HEADER SESUAI HALAMAN PROGRES FISIK -->
-        <div class="page-heading">
-         <div class="page-heading-copy">
-        <!-- Ikon Banner -->
-           <div>
+
+    <!-- BANNER HEADER SESUAI HALAMAN PROGRES FISIK -->
+    <div class="page-heading">
+        <div class="page-heading-copy">
+            <div>
                 <p class="eyebrow mb-1">MONITORING</p>
                 <h1 class="h3 mb-1">Dashboard</h1>
                 <p class="text-muted mb-0">Ringkasan indikator dan progres kegiatan.</p>
             </div>
         </div>
         <div class="heading-actions">
-            <a class="btn btn-primary btn-sm" href="(#)">
-                <i class="bi bi-plus-lg" aria-hidden="true"></i> Edit Dasboard
+            <a class="btn btn-primary btn-sm" href="{{ route('kegiatan.index') }}">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i> Edit Dashboard
             </a>
         </div>
     </div>
 
-        <div class="dashboard-ux-layout dashboard-ux-layout-simple w-full">
-            <main class="dashboard-ux-main w-full">
-                <!-- KPI Section -->
-                <section class="dashboard-ux-kpis grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" aria-label="Ringkasan indikator">
-                    <article class="dashboard-ux-kpi-card card p-4 flex flex-col justify-between">
-                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Jumlah Paket</span>
-                        <strong class="text-3xl font-extrabold my-1">{{ number_format($jumlahKegiatan, 0, ',', '.') }}</strong>
-                        <small class="text-xs opacity-60">paket</small>
-                    </article>
+    <div class="dashboard-ux-layout dashboard-ux-layout-simple w-full">
+        <main class="dashboard-ux-main w-full">
+            <!-- KPI Section -->
+            <section class="dashboard-ux-kpis grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" aria-label="Ringkasan indikator">
+                <article class="dashboard-ux-kpi-card card p-4 flex flex-col justify-between">
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Jumlah Paket</span>
+                    <strong class="text-3xl font-extrabold my-1">{{ number_format($jumlahKegiatan, 0, ',', '.') }}</strong>
+                    <small class="text-xs opacity-60">paket</small>
+                </article>
 
-                    <article class="dashboard-ux-kpi-card primary card p-4 flex flex-col justify-between">
-                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Progress Fisik</span>
-                        <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong>
-                        <small class="text-xs opacity-60">Target Fisik</small>
-                    </article>
+                <article class="dashboard-ux-kpi-card primary card p-4 flex flex-col justify-between">
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Progress Fisik</span>
+                    <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong>
+                    <small class="text-xs opacity-60">Target Fisik</small>
+                </article>
 
-                    <article class="dashboard-ux-kpi-card success card p-4 flex flex-col justify-between">
-                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Keuangan</span>
-                        <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong>
-                        <small class="text-xs opacity-60">Realisasi Keuangan</small>
-                    </article>
+                <article class="dashboard-ux-kpi-card success card p-4 flex flex-col justify-between">
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Keuangan</span>
+                    <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong>
+                    <small class="text-xs opacity-60">Realisasi Keuangan</small>
+                </article>
 
-                    <a href="{{ route('rekapitulasi.index') }}" class="dashboard-ux-kpi-card link-card card p-4 flex flex-col justify-between hover:scale-[1.02] transition-transform" target="_blank" rel="noopener noreferrer">
-                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Nilai Uang Muka / Progres</span>
-                        <strong class="text-xl font-bold my-1 text-emerald-400">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</strong>
-                        <small class="text-xs opacity-60">Detail per paket</small>
-                    </a>
+                <a href="{{ route('rekapitulasi.index') }}" class="dashboard-ux-kpi-card link-card card p-4 flex flex-col justify-between hover:scale-[1.02] transition-transform" target="_blank" rel="noopener noreferrer">
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Nilai Uang Muka / Progres</span>
+                    <strong class="text-xl font-bold my-1 text-emerald-400">Rp {{ number_format($totalRealisasiKeuangan, 0, ',', '.') }}</strong>
+                    <small class="text-xs opacity-60">Detail per paket</small>
+                </a>
 
-                    <article class="dashboard-ux-kpi-card muted card p-4 flex flex-col justify-between">
-                        <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Ringkasan Tambahan</span>
-                        <strong class="text-3xl font-extrabold my-1">{{ number_format($kegiatan->count(), 0, ',', '.') }}</strong>
-                        <small class="text-xs opacity-60">kegiatan aktif</small>
-                    </article>
-                </section>
+                <article class="dashboard-ux-kpi-card muted card p-4 flex flex-col justify-between">
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Ringkasan Tambahan</span>
+                    <strong class="text-3xl font-extrabold my-1">{{ number_format($kegiatan->count(), 0, ',', '.') }}</strong>
+                    <small class="text-xs opacity-60">kegiatan aktif</small>
+                </article>
+            </section>
 
-                <!-- Bottom Section: Chart & Table -->
-                <section class="dashboard-ux-bottom-grid grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    <!-- Chart Panel -->
-                    <article class="dashboard-ux-chart-panel card p-5 lg:col-span-5">
-                        <div class="dashboard-ux-panel-head flex justify-between items-center mb-4">
-                            <div>
-                        
-                            </div>
-                            <div class="dashboard-ux-chart-legend flex gap-3 text-xs">
-                                <span class="flex items-center gap-1"><i class="legend-dot target w-2 h-2 rounded-full bg-indigo-500 inline-block"></i>Target</span>
-                                <span class="flex items-center gap-1"><i class="legend-dot actual w-2 h-2 rounded-full bg-emerald-400 inline-block"></i>Aktual</span>
-                            </div>
+            <!-- Bottom Section: Chart & Table -->
+            <section class="dashboard-ux-bottom-grid grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Chart Panel -->
+                <article class="dashboard-ux-chart-panel card p-5 lg:col-span-5">
+                    <div class="dashboard-ux-panel-head flex justify-between items-center mb-4">
+                        <div>
+                            <h5 class="text-lg font-bold">Kurva-S</h5>
                         </div>
-
-                        <div class="dashboard-ux-chart-wrap w-full overflow-hidden" role="img" aria-label="Grafik kurva-S target dan realisasi paket 1 sampai 7">
-                            <svg viewBox="0 0 600 260" preserveAspectRatio="none" class="w-full h-auto" aria-hidden="true">
-                                <defs>
-                                    <linearGradient id="actualLineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                                        <stop offset="0%" stop-color="#60a5fa"/>
-                                        <stop offset="100%" stop-color="#34d399"/>
-                                    </linearGradient>
-                                </defs>
-                                <g class="dashboard-ux-grid-lines stroke-slate-700/40" stroke-width="1">
-                                    <line x1="32" y1="20" x2="570" y2="20"/>
-                                    <line x1="32" y1="78" x2="570" y2="78"/>
-                                    <line x1="32" y1="136" x2="570" y2="136"/>
-                                    <line x1="32" y1="194" x2="570" y2="194"/>
-                                    <line x1="32" y1="240" x2="570" y2="240"/>
-                                </g>
-                                <path d="M32 210 C110 180, 150 168, 200 140 S290 80, 340 90 S420 100, 470 74 S540 40, 570 28" fill="none" stroke="#818cf8" stroke-width="3" class="dashboard-ux-target-line"/>
-                                <path d="M32 215 C110 200, 150 192, 200 170 S290 120, 340 120 S420 98, 470 62 S540 44, 570 32" fill="none" stroke="url(#actualLineGradient)" stroke-width="3" class="dashboard-ux-actual-line"/>
-                                <g class="dashboard-ux-points fill-emerald-400">
-                                    <circle cx="32" cy="215" r="4"/>
-                                    <circle cx="122" cy="198" r="4"/>
-                                    <circle cx="198" cy="170" r="4"/>
-                                    <circle cx="310" cy="118" r="4"/>
-                                    <circle cx="395" cy="100" r="4"/>
-                                    <circle cx="470" cy="62" r="4"/>
-                                    <circle cx="570" cy="32" r="4"/>
-                                </g>
-                                <g class="dashboard-ux-axis-labels fill-slate-400 text-xs">
-                                    <text x="32" y="258">1</text>
-                                    <text x="122" y="258">2</text>
-                                    <text x="198" y="258">3</text>
-                                    <text x="310" y="258">4</text>
-                                    <text x="395" y="258">5</text>
-                                    <text x="470" y="258">6</text>
-                                    <text x="570" y="258">7</text>
-                                </g>
-                            </svg>
+                        <div class="dashboard-ux-chart-legend flex gap-3 text-xs">
+                            <span class="flex items-center gap-1"><i class="legend-dot target w-2 h-2 rounded-full bg-indigo-500 inline-block"></i>Target</span>
+                            <span class="flex items-center gap-1"><i class="legend-dot actual w-2 h-2 rounded-full bg-emerald-400 inline-block"></i>Aktual</span>
                         </div>
-                    </article>
+                    </div>
 
-                    <!-- Table Panel -->
-                    <article class="dashboard-ux-table-panel card p-5 lg:col-span-7">
-                        <div class="dashboard-ux-panel-head table-head mb-4">
-                            <div>
-                                <h5 class="text-lg font-bold">Rekapan Progress</h5>
-                            </div>
+                    <div class="dashboard-ux-chart-wrap w-full overflow-hidden" role="img" aria-label="Grafik kurva-S target dan realisasi paket 1 sampai 7">
+                        <svg viewBox="0 0 600 260" preserveAspectRatio="none" class="w-full h-auto" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="actualLineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                                    <stop offset="0%" stop-color="#60a5fa"/>
+                                    <stop offset="100%" stop-color="#34d399"/>
+                                </linearGradient>
+                            </defs>
+                            <g class="dashboard-ux-grid-lines stroke-slate-700/40" stroke-width="1">
+                                <line x1="32" y1="20" x2="570" y2="20"/>
+                                <line x1="32" y1="78" x2="570" y2="78"/>
+                                <line x1="32" y1="136" x2="570" y2="136"/>
+                                <line x1="32" y1="194" x2="570" y2="194"/>
+                                <line x1="32" y1="240" x2="570" y2="240"/>
+                            </g>
+                            <path d="M32 210 C110 180, 150 168, 200 140 S290 80, 340 90 S420 100, 470 74 S540 40, 570 28" fill="none" stroke="#818cf8" stroke-width="3" class="dashboard-ux-target-line"/>
+                            <path d="M32 215 C110 200, 150 192, 200 170 S290 120, 340 120 S420 98, 470 62 S540 44, 570 32" fill="none" stroke="url(#actualLineGradient)" stroke-width="3" class="dashboard-ux-actual-line"/>
+                            <g class="dashboard-ux-points fill-emerald-400">
+                                <circle cx="32" cy="215" r="4"/>
+                                <circle cx="122" cy="198" r="4"/>
+                                <circle cx="198" cy="170" r="4"/>
+                                <circle cx="310" cy="118" r="4"/>
+                                <circle cx="395" cy="100" r="4"/>
+                                <circle cx="470" cy="62" r="4"/>
+                                <circle cx="570" cy="32" r="4"/>
+                            </g>
+                            <g class="dashboard-ux-axis-labels fill-slate-400 text-xs">
+                                <text x="32" y="258">1</text>
+                                <text x="122" y="258">2</text>
+                                <text x="198" y="258">3</text>
+                                <text x="310" y="258">4</text>
+                                <text x="395" y="258">5</text>
+                                <text x="470" y="258">6</text>
+                                <text x="570" y="258">7</text>
+                            </g>
+                        </svg>
+                    </div>
+                </article>
+
+                <!-- Table Panel -->
+                <article class="dashboard-ux-table-panel card p-5 lg:col-span-7">
+                    <div class="dashboard-ux-panel-head table-head mb-4">
+                        <div>
+                            <h5 class="text-lg font-bold">Rekapan Progress</h5>
                         </div>
+                    </div>
 
-                        <div class="dashboard-ux-table-wrap overflow-x-auto">
-                            <table class="table w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="border-b border-slate-700/50 text-xs uppercase tracking-wider text-slate-400">
-                                        <th class="py-3 px-2">Kegiatan</th>
-                                        <th class="py-3 px-2">Rencana</th>
-                                        <th class="py-3 px-2">Kemajuan</th>
-                                        <th class="py-3 px-2">Deviasi</th>
-                                        <th class="py-3 px-2">Uang / Nilai</th>
+                    <div class="dashboard-ux-table-wrap overflow-x-auto">
+                        <table class="table w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-700/50 text-xs uppercase tracking-wider text-slate-400">
+                                    <th class="py-3 px-2">Kegiatan</th>
+                                    <th class="py-3 px-2">Rencana</th>
+                                    <th class="py-3 px-2">Kemajuan</th>
+                                    <th class="py-3 px-2">Deviasi</th>
+                                    <th class="py-3 px-2">Uang / Nilai</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700/30 text-sm">
+                                @forelse ($summaryRows as $row)
+                                    <tr class="hover:bg-slate-800/40 transition-colors">
+                                        <td class="py-3 px-2">
+                                            <a href="{{ $row['detail_url'] }}" target="_blank" rel="noopener noreferrer" class="row-link font-medium hover:underline">
+                                                {{ $row['nama'] }}
+                                            </a>
+                                        </td>
+                                        <td class="py-3 px-2">{{ number_format($row['rencana'], 1, ',', '.') }}%</td>
+                                        <td class="py-3 px-2">{{ number_format($row['kemajuan'], 1, ',', '.') }}%</td>
+                                        <td class="py-3 px-2 font-semibold {{ $row['deviasi'] >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">
+                                            {{ $row['deviasi'] >= 0 ? '+' : '' }}{{ number_format($row['deviasi'], 1, ',', '.') }}%
+                                        </td>
+                                        <td class="py-3 px-2">Rp {{ number_format($row['nilai'], 0, ',', '.') }}</td>
                                     </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-700/30 text-sm">
-                                    @forelse ($summaryRows as $row)
-                                        <tr class="hover:bg-slate-800/40 transition-colors">
-                                            <td class="py-3 px-2">
-                                                <a href="{{ $row['detail_url'] }}" target="_blank" rel="noopener noreferrer" class="row-link font-medium hover:underline">
-                                                    {{ $row['nama'] }}
-                                                </a>
-                                            </td>
-                                            <td class="py-3 px-2">{{ number_format($row['rencana'], 1, ',', '.') }}%</td>
-                                            <td class="py-3 px-2">{{ number_format($row['kemajuan'], 1, ',', '.') }}%</td>
-                                            <td class="py-3 px-2 font-semibold {{ $row['deviasi'] >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">
-                                                {{ $row['deviasi'] >= 0 ? '+' : '' }}{{ number_format($row['deviasi'], 1, ',', '.') }}%
-                                            </td>
-                                            <td class="py-3 px-2">Rp {{ number_format($row['nilai'], 0, ',', '.') }}</td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center py-6 text-slate-400">Belum ada data kegiatan.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </article>
-                </section>
-            </main>
-        </div>
-        <br>
-          <!-- Tombol Lihat Detail Paket -->
-        <div class="heading-actions">
-            <a class="btn btn-primary btn-sm" href="(#)">
-                <i class="bi bi-plus-lg" aria-hidden="true"></i> Detail Paket
-            </a>
-        </div>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-6 text-slate-400">Belum ada data kegiatan.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <br>
+
+    <!-- Tombol Lihat Detail Paket -->
+    <div class="heading-actions">
+        <a class="btn btn-primary btn-sm" href="{{ route('rekapitulasi.index') }}">
+            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Detail Paket
+        </a>
     </div>
 @endsection
