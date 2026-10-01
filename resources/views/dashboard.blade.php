@@ -24,6 +24,7 @@
                 'detail_url' => route('kegiatan.edit', $item),
             ];
         });
+
     @endphp
 
     <!-- BANNER HEADER SESUAI HALAMAN PROGRES FISIK -->
@@ -53,15 +54,15 @@
                 </article>
 
                 <article class="dashboard-ux-kpi-card primary card p-4 flex flex-col justify-between">
-                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Progress Fisik</span>
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Rata-Rata Progres Fisik per Kegiatan</span>
                     <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseFisik, 1, ',', '.') }}%</strong>
-                    <small class="text-xs opacity-60">Target Fisik</small>
+                    <small class="text-xs opacity-60">Rata-rata seluruh kegiatan</small>
                 </article>
 
                 <article class="dashboard-ux-kpi-card success card p-4 flex flex-col justify-between">
-                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">% Keuangan</span>
+                    <span class="dashboard-ux-kpi-label text-xs uppercase tracking-wider opacity-75">Rata-Rata Progres Keuangan per Kegiatan</span>
                     <strong class="text-3xl font-extrabold my-1">{{ number_format($persentaseKeuangan, 1, ',', '.') }}%</strong>
-                    <small class="text-xs opacity-60">Realisasi Keuangan</small>
+                    <small class="text-xs opacity-60">Rata-rata seluruh kegiatan</small>
                 </article>
 
                 <a href="{{ route('rekapitulasi.index') }}" class="dashboard-ux-kpi-card link-card card p-4 flex flex-col justify-between hover:scale-[1.02] transition-transform" target="_blank" rel="noopener noreferrer">
@@ -82,9 +83,9 @@
                 <!-- Chart Panel -->
                 <article class="dashboard-ux-chart-panel card p-5 lg:col-span-5">
                     <div class="dashboard-ux-panel-head flex justify-between items-center mb-4">
-                        <div>
+                        {{-- <div>
                             <h5 class="text-lg font-bold">Kurva-S</h5>
-                        </div>
+                        </div> --}}
                         <div class="dashboard-ux-chart-legend flex gap-3 text-xs">
                             <span class="flex items-center gap-1"><i class="legend-dot target w-2 h-2 rounded-full bg-indigo-500 inline-block"></i>Target</span>
                             <span class="flex items-center gap-1"><i class="legend-dot actual w-2 h-2 rounded-full bg-emerald-400 inline-block"></i>Aktual</span>
@@ -134,7 +135,7 @@
                 <article class="dashboard-ux-table-panel card p-5 lg:col-span-7">
                     <div class="dashboard-ux-panel-head table-head mb-4">
                         <div>
-                            <h5 class="text-lg font-bold">Rekapan Progress</h5>
+                            <h5 class="text-lg font-bold">Pemutakhiran Terakhir</h5>
                         </div>
                     </div>
 
@@ -159,7 +160,7 @@
                                         </td>
                                         <td class="py-3 px-2">{{ number_format($row['rencana'], 1, ',', '.') }}%</td>
                                         <td class="py-3 px-2">{{ number_format($row['kemajuan'], 1, ',', '.') }}%</td>
-                                        <td class="py-3 px-2 font-semibold {{ $row['deviasi'] >= 0 ? 'text-emerald-400' : 'text-rose-400' }}">
+                                        <td class="py-3 px-2 font-semibold {{ $row['deviasi'] >= 0 ? '!text-emerald-400' : '!text-rose-400' }}">
                                             {{ $row['deviasi'] >= 0 ? '+' : '' }}{{ number_format($row['deviasi'], 1, ',', '.') }}%
                                         </td>
                                         <td class="py-3 px-2">Rp {{ number_format($row['nilai'], 0, ',', '.') }}</td>
@@ -185,4 +186,5 @@
             <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Detail Paket
         </a>
     </div>
+
 @endsection

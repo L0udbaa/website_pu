@@ -17,15 +17,31 @@ class DashboardController extends Controller
         $progresKeuangan = ProgresKeuangan::query();
         $totalRencanaKeuangan = (clone $progresKeuangan)->sum('rencana_keuangan');
         $totalRealisasiKeuangan = (clone $progresKeuangan)->sum('realisasi_keuangan');
-        $totalRealisasiPersenKeuangan = (clone $progresKeuangan)->sum('realisasi_persen');
-
-        $persentaseFisik = min(100, round($totalRealisasiFisik, 1));
-        $persentaseKeuangan = min(100, round($totalRealisasiPersenKeuangan, 1));
 
         $kegiatan = Kegiatan::with(['progresFisik', 'progresKeuangan'])
             ->latest('id')
-            ->take(6)
             ->get();
+
+        $rataRataFisikPerKegiatan = $kegiatan
+            ->map(function (Kegiatan $item) {
+                return $item->progresFisik->isNotEmpty()
+                    ? $item->progresFisik->sum(fn ($progres) => (float) $progres->realisasi_fisik)
+                    : null;
+            })
+            ->filter(fn ($nilai) => $nilai !== null)
+            ->map(fn ($nilai) => (float) $nilai);
+
+        $rataRataKeuanganPerKegiatan = $kegiatan
+            ->map(function (Kegiatan $item) {
+                return $item->progresKeuangan->isNotEmpty()
+                    ? $item->progresKeuangan->sum(fn ($progres) => (float) $progres->realisasi_persen)
+                    : null;
+            })
+            ->filter(fn ($nilai) => $nilai !== null)
+            ->map(fn ($nilai) => (float) $nilai);
+
+        $persentaseFisik = min(100, round($rataRataFisikPerKegiatan->avg() ?? 0, 1));
+        $persentaseKeuangan = min(100, round($rataRataKeuanganPerKegiatan->avg() ?? 0, 1));
 
         $kegiatanBelumLengkap = Kegiatan::withCount(['progresFisik', 'progresKeuangan'])
             ->where(function ($query) {
